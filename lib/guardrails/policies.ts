@@ -22,12 +22,36 @@ function toBigInt(value: unknown): bigint | null {
   return null;
 }
 
+function isAllowedToken(context: PolicyContext): boolean {
+  const args = firstArg<TransferArgs>(context);
+  if (!args || typeof args.token !== "string") return false;
+  return ALLOWED_TOKENS.has(args.token.toLowerCase());
+}
+
+function isWithinTokenCap(context: PolicyContext): boolean {
+  const amount = toBigInt(firstArg<TransferArgs>(context)?.amount);
+  return amount !== null && amount <= MAX_USDT_BASE_UNITS;
+}
+
+function isWithinNativeCap(context: PolicyContext): boolean {
+  const value = toBigInt(firstArg<TransactionArgs>(context)?.value);
+  return value !== null && value <= MAX_NATIVE_WEI;
+}
+
 /**
  * Compiles the GoFI guardrails into WDK policies.
  *
- * Every rule is fail-closed: a condition that throws or times out on a DENY
- * rule counts as a match, so an unreadable argument blocks the operation
- * instead of slipping through.
+ * WDK's policy engine is DEFAULT-DENY: once any policy governs an account,
+ * an operation is blocked unless an ALLOW rule explicitly matches it. That is
+ * why this list ends with `gofi-permitted-operations` — without it nothing
+ * could move at all, including legitimate transfers.
+ *
+ * The DENY rules are still worth keeping: DENY always beats ALLOW, they carry
+ * far better error messages than the engine's generic `governed-but-unmatched`,
+ * and they document intent explicitly rather than relying on an absence.
+ *
+ * DENY conditions are fail-closed (a throw counts as a match), ALLOW conditions
+ * are fail-open-as-no-match. Both directions therefore err towards blocking.
  */
 export function buildGuardrailPolicies(): Policy[] {
   return [
@@ -42,13 +66,7 @@ export function buildGuardrailPolicies(): Policy[] {
           reason: "Token is not on the GoFI allowlist.",
           operation: "transfer",
           action: "DENY",
-          conditions: [
-            (context) => {
-              const args = firstArg<TransferArgs>(context);
-              if (!args || typeof args.token !== "string") return true;
-              return !ALLOWED_TOKENS.has(args.token.toLowerCase());
-            },
-          ],
+          conditions: [(context) => !isAllowedToken(context)],
         },
       ],
     },
@@ -65,29 +83,14 @@ export function buildGuardrailPolicies(): Policy[] {
           } USDT.`,
           operation: "transfer",
           action: "DENY",
-          conditions: [
-            (context) => {
-              const args = firstArg<TransferArgs>(context);
-              const amount = toBigInt(args?.amount);
-              if (amount === null) return true;
-              return amount > MAX_USDT_BASE_UNITS;
-            },
-          ],
+          conditions: [(context) => !isWithinTokenCap(context)],
         },
         {
           name: "deny-native-transfer-over-cap",
           reason: "Native transfer exceeds the per-transaction cap of 0.05 ETH.",
           operation: "sendTransaction",
           action: "DENY",
-          conditions: [
-            (context) => {
-              const args = firstArg<TransactionArgs>(context);
-              if (!args) return true;
-              const value = toBigInt(args.value);
-              if (value === null) return true;
-              return value > MAX_NATIVE_WEI;
-            },
-          ],
+          conditions: [(context) => !isWithinNativeCap(context)],
         },
       ],
     },
@@ -104,6 +107,26 @@ export function buildGuardrailPolicies(): Policy[] {
           operation: ["approve", "signAuthorization"],
           action: "DENY",
           conditions: [() => true],
+        },
+      ],
+    },
+    {
+      id: "gofi-permitted-operations",
+      name: "GoFI permitted operations",
+      scope: "project",
+      wallet: SEPOLIA,
+      rules: [
+        {
+          name: "allow-allowlisted-token-transfer-within-cap",
+          operation: "transfer",
+          action: "ALLOW",
+          conditions: [isAllowedToken, isWithinTokenCap],
+        },
+        {
+          name: "allow-native-transfer-within-cap",
+          operation: "sendTransaction",
+          action: "ALLOW",
+          conditions: [isWithinNativeCap],
         },
       ],
     },

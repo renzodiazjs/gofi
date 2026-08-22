@@ -93,3 +93,62 @@ export async function sendUsdtTransfer({
     explorerUrl: config.explorerTxUrl(result.hash),
   };
 }
+
+export type NativeTransferRequest = {
+  to: string;
+  /** Decimal amount of the native coin, e.g. "0.0001". */
+  amount: string;
+  network?: NetworkKey;
+  index?: number;
+};
+
+/** Prices a native transfer without signing. */
+export async function quoteNativeTransfer({
+  to,
+  amount,
+  network = DEFAULT_NETWORK,
+  index = 0,
+}: NativeTransferRequest): Promise<TransferQuote> {
+  const { config } = resolve(network);
+  const account = await getWdk().getAccount(network, index);
+  const value = parseUnits(amount, config.nativeDecimals);
+
+  const quote = await account.quoteSendTransaction({ to, value });
+
+  return {
+    token: config.nativeSymbol,
+    recipient: to,
+    amount: formatUnits(value, config.nativeDecimals),
+    amountBaseUnits: value.toString(),
+    fee: formatUnits(BigInt(quote.fee), config.nativeDecimals),
+    feeSymbol: config.nativeSymbol,
+  };
+}
+
+/**
+ * Executes a native transfer. Guardrail policies gate `sendTransaction`, so an
+ * over-cap value throws PolicyViolationError before anything is signed.
+ */
+export async function sendNativeTransfer({
+  to,
+  amount,
+  network = DEFAULT_NETWORK,
+  index = 0,
+}: NativeTransferRequest): Promise<TransferReceipt> {
+  const { config } = resolve(network);
+  const account = await getWdk().getAccount(network, index);
+  const value = parseUnits(amount, config.nativeDecimals);
+
+  const result = await account.sendTransaction({ to, value });
+
+  return {
+    token: config.nativeSymbol,
+    recipient: to,
+    amount: formatUnits(value, config.nativeDecimals),
+    amountBaseUnits: value.toString(),
+    fee: formatUnits(BigInt(result.fee), config.nativeDecimals),
+    feeSymbol: config.nativeSymbol,
+    hash: result.hash,
+    explorerUrl: config.explorerTxUrl(result.hash),
+  };
+}

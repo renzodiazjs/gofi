@@ -2,7 +2,12 @@ import { PolicyViolationError } from "@tetherto/wdk";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { quoteUsdtTransfer, sendUsdtTransfer } from "@/lib/wdk/transfer";
+import {
+  quoteNativeTransfer,
+  quoteUsdtTransfer,
+  sendNativeTransfer,
+  sendUsdtTransfer,
+} from "@/lib/wdk/transfer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,6 +17,7 @@ const bodySchema = z.object({
     .string()
     .regex(/^0x[a-fA-F0-9]{40}$/, "Recipient must be a 0x EVM address."),
   amount: z.string().min(1),
+  asset: z.enum(["USDT", "ETH"]).default("USDT"),
   /**
    * Two-step by design: without an explicit confirmation the endpoint only
    * prices the transfer. Nothing is signed until the user approves the quote.
@@ -37,20 +43,23 @@ export async function POST(request: Request) {
     );
   }
 
-  const { to, amount, confirm } = parsed.data;
+  const { to, amount, asset, confirm } = parsed.data;
+  const native = asset === "ETH";
 
   try {
     if (!confirm) {
-      return NextResponse.json({
-        status: "quote",
-        quote: await quoteUsdtTransfer({ to, amount }),
-      });
+      const quote = native
+        ? await quoteNativeTransfer({ to, amount })
+        : await quoteUsdtTransfer({ to, amount });
+
+      return NextResponse.json({ status: "quote", quote });
     }
 
-    return NextResponse.json({
-      status: "sent",
-      receipt: await sendUsdtTransfer({ to, amount }),
-    });
+    const receipt = native
+      ? await sendNativeTransfer({ to, amount })
+      : await sendUsdtTransfer({ to, amount });
+
+    return NextResponse.json({ status: "sent", receipt });
   } catch (error) {
     if (error instanceof PolicyViolationError) {
       return NextResponse.json(
