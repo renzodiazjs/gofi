@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-import type { StrategyRow } from "@/lib/supabase/types";
+import type { GoalRow, StrategyRow } from "@/lib/supabase/types";
+import type { WalletSnapshot } from "@/lib/wdk/account";
 import { Badge, Button, Card, ErrorNote, Field } from "./ui";
 
 type Plan = {
@@ -43,12 +44,16 @@ type State =
 
 export function ApprovalCard({
   strategy,
+  goal,
+  wallet,
   positionAddress,
   onExecuted,
   onBack,
   onCancel,
 }: {
   strategy: StrategyRow;
+  goal: GoalRow;
+  wallet: WalletSnapshot;
   positionAddress: string;
   onExecuted: () => void;
   onBack: () => void;
@@ -144,6 +149,15 @@ export function ApprovalCard({
 
   const busy = state.phase === "quoting" || state.phase === "executing";
 
+  const usdtLegs = strategy.allocations.filter((a) => a.asset === "USDT");
+  const requiredUsdt = usdtLegs.reduce(
+    (sum, leg) => sum + (goal.initial_capital * leg.percentage) / 100,
+    0
+  );
+  const usdtToken = wallet.tokens.find((t) => t.symbol === "USDT");
+  const availableUsdt = usdtToken ? Number(usdtToken.formatted) : 0;
+  const insufficient = requiredUsdt > 0 && availableUsdt < requiredUsdt;
+
   return (
     <Card title="Approval & execution" step="04">
       <p className="mb-5 text-sm text-white/50">
@@ -154,6 +168,13 @@ export function ApprovalCard({
       <dl className="mb-5">
         <Field label="Position account" value={positionAddress} />
       </dl>
+
+      {insufficient && state.phase !== "executed" && (
+        <p className="mb-5 text-xs text-amber-300/90">
+          Insufficient USDT: this strategy would need ~{requiredUsdt.toFixed(2)}{" "}
+          USDT but your wallet only holds {availableUsdt.toFixed(2)} USDT.
+        </p>
+      )}
 
       {state.phase === "idle" && (
         <Button
@@ -204,7 +225,7 @@ export function ApprovalCard({
                 setState({ ...state, phase: "executing" });
                 void call(true);
               }}
-              disabled={busy}
+              disabled={busy || insufficient}
             >
               {state.phase === "executing" ? "Signing…" : "Confirm & execute"}
             </Button>

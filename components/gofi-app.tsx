@@ -169,6 +169,8 @@ export function GofiApp() {
         (wallet ? (
           <ApprovalCard
             strategy={proposal.strategy}
+            goal={proposal.goal}
+            wallet={wallet}
             positionAddress={wallet.positionAddress}
             onExecuted={afterExecution}
             onBack={() => setStep("strategy")}
