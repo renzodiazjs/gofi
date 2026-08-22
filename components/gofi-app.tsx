@@ -72,7 +72,9 @@ export function GofiApp() {
         onLoad={loadWallet}
       />
 
-      <GoalForm onSubmit={analyze} busy={busy} error={error} />
+      <div id="goal" className="scroll-mt-8">
+        <GoalForm onSubmit={analyze} busy={busy} error={error} />
+      </div>
 
       {proposal && (
         <>

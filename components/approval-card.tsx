@@ -23,12 +23,23 @@ type Quote = {
 
 type Receipt = Quote & { hash: string; explorerUrl: string };
 
+type Confirmation = {
+  status: "pending" | "confirmed" | "failed";
+  blockNumber: number | null;
+  failureReason: string | null;
+};
+
 type State =
   | { phase: "idle" }
   | { phase: "quoting" }
   | { phase: "quoted"; plan: Plan; quote: Quote }
   | { phase: "executing"; plan: Plan; quote: Quote }
-  | { phase: "executed"; plan: Plan; receipt: Receipt };
+  | {
+      phase: "executed";
+      plan: Plan;
+      receipt: Receipt;
+      confirmation: Confirmation;
+    };
 
 export function ApprovalCard({
   strategy,
@@ -42,6 +53,47 @@ export function ApprovalCard({
   const [state, setState] = useState<State>({ phase: "idle" });
   const [error, setError] = useState<string | null>(null);
   const [blockedBy, setBlockedBy] = useState<string | null>(null);
+
+  /**
+   * A broadcast hash is not a mined transaction. Poll the ledger endpoint,
+   * which reconciles against the chain, until the row stops being pending.
+   *
+   * Polling lives inside the async flow rather than an effect: the request that
+   * produced the hash is the only thing that needs to watch it, and an effect
+   * would set state during render.
+   */
+  async function trackConfirmation(plan: Plan, receipt: Receipt) {
+    const deadline = Date.now() + 120_000;
+
+    while (Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 5_000));
+
+      try {
+        const response = await fetch(`/api/transactions/${receipt.hash}`);
+        if (!response.ok) continue;
+
+        const payload = await response.json();
+        const row = payload.transaction;
+
+        if (row?.status && row.status !== "pending") {
+          setState({
+            phase: "executed",
+            plan,
+            receipt,
+            confirmation: {
+              status: row.status,
+              blockNumber: row.block_number ?? null,
+              failureReason: row.failure_reason ?? null,
+            },
+          });
+          onExecuted();
+          return;
+        }
+      } catch {
+        // Transient network failure — keep polling until the deadline.
+      }
+    }
+  }
 
   async function call(confirm: boolean) {
     setError(null);
@@ -65,8 +117,18 @@ export function ApprovalCard({
       }
 
       if (confirm) {
-        setState({ phase: "executed", plan: payload.plan, receipt: payload.receipt });
+        setState({
+          phase: "executed",
+          plan: payload.plan,
+          receipt: payload.receipt,
+          confirmation: {
+            status: "pending",
+            blockNumber: null,
+            failureReason: null,
+          },
+        });
         onExecuted();
+        void trackConfirmation(payload.plan, payload.receipt);
       } else {
         setState({ phase: "quoted", plan: payload.plan, quote: payload.quote });
       }
@@ -133,6 +195,7 @@ export function ApprovalCard({
 
           <div className="flex gap-3">
             <Button
+              variant="shimmer"
               onClick={() => {
                 setState({ ...state, phase: "executing" });
                 void call(true);
@@ -154,7 +217,25 @@ export function ApprovalCard({
 
       {state.phase === "executed" && (
         <div className="space-y-4">
-          <Badge tone="emerald">executed on-chain</Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone="emerald">broadcast</Badge>
+            {state.confirmation.status === "pending" && (
+              <Badge tone="amber">waiting for a block…</Badge>
+            )}
+            {state.confirmation.status === "confirmed" && (
+              <Badge tone="emerald">
+                confirmed in block {state.confirmation.blockNumber}
+              </Badge>
+            )}
+            {state.confirmation.status === "failed" && (
+              <Badge tone="rose">failed on-chain</Badge>
+            )}
+          </div>
+
+          {state.confirmation.failureReason && (
+            <ErrorNote>{state.confirmation.failureReason}</ErrorNote>
+          )}
+
           <dl className="rounded-lg border border-emerald-400/20 bg-emerald-400/[0.05] p-4">
             <Field
               label="Amount"
