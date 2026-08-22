@@ -22,8 +22,9 @@ export function WalletCard({
   canContinue: boolean;
   onContinue: () => void;
 }) {
+  // No step number: the wallet is a prerequisite, not step zero of 01–04.
   return (
-    <Card title="Wallet" step="00">
+    <Card title="Wallet">
       {!snapshot && (
         <div className="space-y-4">
           {error && <ErrorNote>{error}</ErrorNote>}

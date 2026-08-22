@@ -9,9 +9,10 @@ import type { WalletSnapshot } from "@/lib/wdk/account";
 import { AccountChip } from "./account-chip";
 import { ApprovalCard } from "./approval-card";
 import { GoalForm, type GoalDraft } from "./goal-form";
+import { Hero } from "./hero";
 import { Protocols } from "./protocols";
 import { AnalysisCard, StrategyCard } from "./strategy-view";
-import { WalletCard } from "./wallet-card";
+
 
 type Proposal = {
   goal: GoalRow;
@@ -143,19 +144,16 @@ export function GofiApp() {
 
   return (
     <>
-      <header className="mb-14 flex flex-wrap items-start justify-between gap-6">
-        <div>
-          <div className="flex items-baseline gap-3">
-            <h1 className="gradient-text text-3xl font-semibold tracking-tight">
-              GoFI
-            </h1>
-            <span className="text-xs uppercase tracking-[0.2em] text-white/30">
-              Goal Finance
-            </span>
-          </div>
-          <p className="mt-4 text-lg text-white/60">
-            Turn financial goals into on-chain strategies.
-          </p>
+      {/* A bar, not a masthead: on the landing the hero already introduces the
+          product, so repeating the pitch up here would say it twice. */}
+      <header className="mb-16 flex items-center justify-between gap-6">
+        <div className="flex items-baseline gap-3">
+          <span className="gradient-text text-xl font-semibold tracking-tight">
+            GoFI
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-white/25">
+            Goal Finance
+          </span>
         </div>
 
         {/*
@@ -174,18 +172,17 @@ export function GofiApp() {
       </header>
 
       {step === "wallet" ? (
-        <div className="grid items-center gap-12 lg:grid-cols-[1fr_340px]">
-          <Protocols />
-
-          <WalletCard
-            snapshot={wallet}
-            loading={walletLoading}
+        <>
+          <Hero
+            onConnect={connect}
+            connecting={walletLoading}
             error={walletError}
-            onLoad={connect}
-            canContinue={wallet !== null}
-            onContinue={() => setStep("goal")}
           />
-        </div>
+
+          <div id="rails" className="mt-28 scroll-mt-12">
+            <Protocols />
+          </div>
+        </>
       ) : (
         <div className="space-y-5">
           {step === "goal" && (

@@ -15,6 +15,7 @@
   --color-spark: var(--spark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-accent: var(--font-accent);
 }
 
 body {
@@ -110,7 +111,7 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
- * Rails cluster — tiles settle in one after another on load.
+ * Entrance — landing columns settle in, staggered by animation-delay.
  * ------------------------------------------------------------------------- */
 @keyframes tile-in {
   from {
@@ -129,6 +130,32 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .tile-in {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Hero blocks — a slow drift so the stack reads as alive without pulling focus
+ * off the headline above it.
+ * ------------------------------------------------------------------------- */
+@keyframes block-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+.block-float {
+  animation: block-float 5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block-float {
     animation: none;
   }
 }
