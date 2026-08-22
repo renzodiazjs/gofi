@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@tetherto/wdk':
+        specifier: 1.0.0-beta.16
+        version: 1.0.0-beta.16(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))
+      '@tetherto/wdk-wallet-evm':
+        specifier: 1.0.0-beta.17
+        version: 1.0.0-beta.17(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))(bare-url@2.5.2)
       next:
         specifier: 16.3.2
         version: 16.3.2(@babel/core@7.29.7)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -17,6 +23,12 @@ importers:
       react-dom:
         specifier: 19.2.8
         version: 19.2.8(react@19.2.8)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
@@ -44,6 +56,9 @@ importers:
         version: 5.9.3
 
 packages:
+
+  '@adraffy/ens-normalize@1.11.1':
+    resolution: {integrity: sha512-nhCBV3quEgesuf7c7KYfperqSS14T8bYuvJ8PcLJp6znkZpFc0AuW4qBtr8eKVyPPe/8RSr7sglCWPU5eaxwKQ==}
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -435,6 +450,20 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@noble/curves@1.2.0':
+    resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
+
+  '@noble/hashes@1.3.2':
+    resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
+    engines: {node: '>= 16'}
+
+  '@noble/hashes@1.8.0':
+    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/secp256k1@2.2.3':
+    resolution: {integrity: sha512-l7r5oEQym9Us7EAigzg30/PQAvynhMt2uoYtT3t26eGDVm9Yii5mZ5jWSWmZ/oSIR2Et0xfc6DXrG0bZ787V3w==}
+
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -549,6 +578,18 @@ packages:
   '@tailwindcss/postcss@4.3.3':
     resolution: {integrity: sha512-JTSZZGQi1AyKirbLN3azmjVzef92tcX7h+iSqPdaeStyFpGpDlKvvpxeOE8njhbUanbRwr3z8DyzhICWnMtQeg==}
 
+  '@tetherto/wdk-failover-provider@1.0.0-beta.2':
+    resolution: {integrity: sha512-G1KNpw11Hql7Q6Xy5oqO+8P+AkJi4QBTK4JZtZvcXmx8ze+d/lzSQSufWLE/k5YAvwJ+xDx7mRzy/teG4zaiOw==}
+
+  '@tetherto/wdk-wallet-evm@1.0.0-beta.17':
+    resolution: {integrity: sha512-0nLdpGRURSd6cmzgVz3l7cdt7bwd5Pdtutt1evpw0u2YxjNGDjDDGMss1l8/kLJxk58QLQjxCvM7IlxzlqGKLQ==}
+
+  '@tetherto/wdk-wallet@1.0.0-beta.17':
+    resolution: {integrity: sha512-xar2qggQJEcqtzlBvZDUzg0gtq3CwDtFzbCtFLqKTg2sjFEt8o2Grbl9r/BchEiulMhlYIX4drgLZ+Yf1rR9qw==}
+
+  '@tetherto/wdk@1.0.0-beta.16':
+    resolution: {integrity: sha512-9Z5SCWnrPH+qfym/qgR7/jmbtX2FX955zJZ0HEyeQdGYBmsrUv9eQvIBkhfHRJYk8c/KuQL5uM3dIRehNHXGjA==}
+
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
 
@@ -563,6 +604,9 @@ packages:
 
   '@types/node@20.19.43':
     resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
+
+  '@types/node@22.7.5':
+    resolution: {integrity: sha512-jML7s2NAzMWc//QSJ1a3prpk78cOPchGvXJsC3C6R6PSMoooztvRVQEz89gmBTBY1SPMaqo5teB4uNHPdetShQ==}
 
   '@types/react-dom@19.2.4':
     resolution: {integrity: sha512-Bsc+QHgp+P/F02XDzNCY9jnZNCUuLki36KT7VKrTXXLdHf+vHMNZnW1rVu5DNW/rCK+fya3DATySbLM4yhtKUw==}
@@ -761,6 +805,9 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  aes-js@4.0.0-beta.5:
+    resolution: {integrity: sha512-G965FqalsNyrPqgEGON7nIx1e/OVENSgiEIzyC63haUMuvNnwIgIjMs52hlTCKhkBny7A2ORNlfY9Zu+jmGk1Q==}
+
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
 
@@ -826,6 +873,14 @@ packages:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
     engines: {node: '>= 0.4'}
 
+  b4a@1.8.1:
+    resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
+    peerDependencies:
+      react-native-b4a: '*'
+    peerDependenciesMeta:
+      react-native-b4a:
+        optional: true
+
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
@@ -833,10 +888,384 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
+  bare-abort-controller@1.1.2:
+    resolution: {integrity: sha512-wk+JZGZEjm7RqaBAU1KuT8TxYYz7h/xxC7+4IVuDZFqK4dGqwrJ/1/yR8hNiSyaAAVHTTFNBJPH4Rzu+rI3IAg==}
+
+  bare-abort@2.0.13:
+    resolution: {integrity: sha512-zdc8l88eB11Jsz5rDd6sCAgv2kUFXgdrZWoMlgU6JMkfAi1/uuGFC3IEHswKbIRQTk5H3T5CMuechsXYxiaHlQ==}
+
+  bare-addon-resolve@1.10.1:
+    resolution: {integrity: sha512-F/SD2du8keuYSb4xipnGz5j2E6yhNdHA8ZVxtHae6h2uOrpBIjjbhXvjzKZbr5XUOzqBzh/i8GVFycj2DlFQIA==}
+    peerDependencies:
+      bare-url: '*'
+    peerDependenciesMeta:
+      bare-url:
+        optional: true
+
+  bare-ansi-escapes@2.2.3:
+    resolution: {integrity: sha512-02ES4/E2RbrtZSnHJ9LntBhYkLA6lPpSEeP8iqS3MccBIVhVBlEmruF1I7HZqx5Q8aiTeYfQVeqmrU9YO2yYoQ==}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-assert@1.2.0:
+    resolution: {integrity: sha512-c6uvgvTJBspTDxtVnPgrBKmLgcpW3Fp72NVKDLg6oT4QjQbhGtvrkHMhGYMK1sh4vjBHOBmuUalyt9hSzV37fQ==}
+
+  bare-async-hooks@0.0.0:
+    resolution: {integrity: sha512-xNfGwUobaomCGMGAqohAekS3uMCj+4tvI4AoOaJnO7NfpN+dvFdkC5xkeQtmZzs2vxf2TR5J6i5FDd1ImCZERw==}
+
+  bare-broadcast-channel@0.2.0:
+    resolution: {integrity: sha512-MuAwdKWr4cSjNwqvbE3tA9Wn6w69q6iXYnP2Wb0nlDa6sKNSMSfY7LXkV4FzWlq9JFP9d0HkCAKPboTLKnUfWQ==}
+
+  bare-buffer@3.7.0:
+    resolution: {integrity: sha512-/xRTbBuLis7sE3Izii0A0yOm+WqH1/gh12UVqkpIAOLZ4gWluyK0THbGB+UysKI8ZBjcZ+MaEs9Auxcyiz2yLA==}
+    engines: {bare: '>=1.20.0'}
+
+  bare-bundle@1.10.0:
+    resolution: {integrity: sha512-4LVlnJAHr00Hh6Vu6ZUJS38rcEtJT3b3vChXSsBsJ2mk1TN0lQ+gzd+Dw5L0aV7uqDZv84smuwW+O02X7PfDlw==}
+    peerDependencies:
+      bare-buffer: '*'
+      bare-url: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+      bare-url:
+        optional: true
+
+  bare-channel@5.2.4:
+    resolution: {integrity: sha512-enkaOtvXUiZsLBSbataxV/QBjehCOK+SUTd2JQWUYW2iIOufpPu9jyZ9bqJqkEquktrK/rpEMVEmKsPzoci/sA==}
+    engines: {bare: '>=1.7.0'}
+
+  bare-console@6.2.0:
+    resolution: {integrity: sha512-qQ+Vasa3NwNdVDcUWKIIEG5p7MKO7uABcV/xBR9MDwQg3QklC5ayemaHzBa/ER4h6TKN2PRQN5IppNwUAMtb8Q==}
+
+  bare-crypto@1.15.3:
+    resolution: {integrity: sha512-macV9lbyJTsLPRXJkBtz8ivTGEo3LCyJInLT9IB/PWJ7pRXwvHs/FP4bx/fWw+HZkiepIYCAV2cuU5CR92XWCw==}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-debug-log@2.0.0:
+    resolution: {integrity: sha512-Vi42PkMQsNV9PUpx2Gl1hikshx5O9FzMJ6o9Nnopseg7qLBBK7Nl31d0RHcfwLEAfmcPApytpc0ZFfq68u22FQ==}
+
+  bare-dgram@1.0.1:
+    resolution: {integrity: sha512-EdsyRErrkWgN8fENdrDdXFEE9HAuJ/m6ehXz13fVj9JhdCaLWIA+L8o5aYNRLt66x08RlyG2vbrRAZoxGfcdlg==}
+
+  bare-diagnostics-channel@1.1.0:
+    resolution: {integrity: sha512-Reu+EQo+eLpB+a5p8UykFEdXndFaRaSgKV38uAMh/qhE2eTeJcdwAwo74hKYyeN8GD3DIFqC9ZlM4bnDc03CIg==}
+
+  bare-dns@2.1.4:
+    resolution: {integrity: sha512-abwjHmpWqSRNB7V5615QxPH92L71AVzFm/kKTs8VYiNTAi2xVdonpv0BjJ0hwXLwomoW+xsSOPjW6PZPO14asg==}
+    engines: {bare: '>=1.7.0'}
+
+  bare-encoding@1.0.3:
+    resolution: {integrity: sha512-Kqf+t/azs13lUeyK4Tb7ha4wdLRXKWCXQ8w1rVmt7KtoPCPdHD/Xwt7LBIsCSwwGglrcmblo5VOLa5avkJqULA==}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-env@3.0.1:
+    resolution: {integrity: sha512-BdoLvnzaWR0YyyJreEx4zG2Od0AC/s9JSZ+EXyMZKunpn8zEgR/dGv37hdFUaY1bjDkcRKvcKkFyJIwlJ0CaYA==}
+
+  bare-events@2.9.1:
+    resolution: {integrity: sha512-Z0oHEHAFDZkffN8Qc39zNZjQlMDkPJRyyyZieU1VH7u8c5S+qHZ2S8ixdKIAxEjfHO7FJxXmJWgteOghVanIsg==}
+    peerDependencies:
+      bare-abort-controller: '*'
+    peerDependenciesMeta:
+      bare-abort-controller:
+        optional: true
+
+  bare-fetch@3.2.0:
+    resolution: {integrity: sha512-ijeXh8iSZb8QcGr8gMXbnoxQe/sWWsde4ofTolyiDH8GtLmqjj141QZDoYYMq0fmwp60oFgngmumQO2/tAytwg==}
+    peerDependencies:
+      bare-abort-controller: '*'
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-abort-controller:
+        optional: true
+      bare-buffer:
+        optional: true
+
+  bare-form-data@1.2.2:
+    resolution: {integrity: sha512-DQyAkCf5mgKT07orewuvaJfoalw7RBSHia4wgkrG7+seI6aHLB+r6gMRdCGrlO+BmCqMwgTeHAHxDU2NrOjQnQ==}
+
+  bare-format@1.0.2:
+    resolution: {integrity: sha512-GswdhnOnP9QtwRbrf4wLApw5widkaLMsLe2XOs35fQD2YfEN1ApoGka+cZ7PfvzxMgfYXmMhj/2OGlVn5/Dxgw==}
+
+  bare-fs@4.8.0:
+    resolution: {integrity: sha512-fM+MhCvdQhZ7NV6S95a07gPSqjIYKn6mFaXfx266wN3ajZGl/+1AzH+ubkXQ0fFZvOe2nk9VHkzdYkQE5zMV3Q==}
+    engines: {bare: '>=1.28.0'}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-hrtime@2.1.1:
+    resolution: {integrity: sha512-VMb3tHo05gsnbu3OXTmkDiwTjMlOsbQmKoysKqKEyR09m77TuDrYFbj3Q5GGk10dAKsUHrnXmwCaeJqzVpB5ZA==}
+
+  bare-http-parser@1.1.5:
+    resolution: {integrity: sha512-sPaDetLbWRmth04JmuTCvw/hoNdWJvYUJN8n1tYdGW3HM0mMnCvK2f0oIxE6HK7iOq+WlsRzEMg1LT/b0wGbLQ==}
+
+  bare-http1@4.5.8:
+    resolution: {integrity: sha512-n7XGxC2SeCplo/cBxqvGvtUxIFN2KYSvqxmMaiCgHRVoam5JuUfl4UcyZ2zx/TluhLNREXgruzhzklsDGZ8kng==}
+    peerDependencies:
+      bare-buffer: '*'
+      bare-url: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+      bare-url:
+        optional: true
+
+  bare-https@3.0.0:
+    resolution: {integrity: sha512-W1GRSCzn+xXKf5bMcPs/hg6Ga1bxPqb7owGfS+tvlBQfPe5Q2STcanRuKZrgU60v5uKrhXH5cgWwM+DLqvXZgQ==}
+
+  bare-inspect@3.1.5:
+    resolution: {integrity: sha512-6xmjxF3vPxNYNb5I6nqPgaRQlQhO1qjkRNe2lKUSTel5IZZQtHJKm59OVYFgCly4urvVqJJvRrJecZGy6rUWdQ==}
+    engines: {bare: '>=1.18.0'}
+
+  bare-inspector@6.1.0:
+    resolution: {integrity: sha512-PRxmZ4gF+K3TLzGubgRFvzdECybTCSKackgNsAdd4e7SdvICxMkGj+p5iX7bSKYSmgDnxgCR+2Z6UXmWykKhvw==}
+    engines: {bare: '>=1.29.0'}
+    peerDependencies:
+      bare-tcp: '*'
+    peerDependenciesMeta:
+      bare-tcp:
+        optional: true
+
+  bare-logger@2.0.3:
+    resolution: {integrity: sha512-U6K7NxHdeAHxEgHFDV8zXvgjgDZKQO6LlCrxQvUvlrZEVTnoezSImMWizi85rbZpVsbeI1ZWcLCRGnoIf5EV8Q==}
+
+  bare-mime@1.0.0:
+    resolution: {integrity: sha512-lUOswzBkfqham4zjLDueKOd4Qj3gS56BiZ3q2f0g0adoFhF+HFNupvTUfZBWoicl7fWJ7Hp2RUZjmkY47dxxOQ==}
+
+  bare-module-lexer@1.6.3:
+    resolution: {integrity: sha512-NQY7cnPV3GZlHJphX4nXmPdNPER/Tp17pVi9/he2ODw/GNZ7FXzrZlrS7WMF8zbtWigqW/NMc9aQc2BH8UJXqA==}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-module-resolve@1.12.4:
+    resolution: {integrity: sha512-xcfgg2u7HqgJiBmah71O9vvdFAgHCvkqC/WSC2O7Bbgosoc1eC/BWe/6IDJ4OsfKlkxuvC/TDWXC+oH5yeW8mA==}
+    peerDependencies:
+      bare-url: '*'
+    peerDependenciesMeta:
+      bare-url:
+        optional: true
+
+  bare-module-traverse@2.4.4:
+    resolution: {integrity: sha512-zK4bDxqeD15Tvu/C5B1Mi/epl9PavjIhU3SVh5RhDb4Hpet6applPVX8Q9rinu7nT80yzgSSlBn0exzJaNXv0A==}
+    peerDependencies:
+      bare-buffer: '*'
+      bare-url: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+      bare-url:
+        optional: true
+
+  bare-module@6.4.0:
+    resolution: {integrity: sha512-Yn4V5g5EqGQL4LYUOmt7fjKzj2JPWyJOqE3lPoeZwfUH5rk4CKUfZj6JhDwbzhBYCqqmUgjgQ5aY8cihAPILLA==}
+    engines: {bare: '>=1.29.4'}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-net@2.3.3:
+    resolution: {integrity: sha512-q1noXFJKn+eNi6vXYv2Y+5FTnn+o7qpli4m2lUZTdK8cBjVs2zGaykuzTUIa29v70eOsQI9OAIyYwN3ODHtFaQ==}
+
+  bare-node-runtime@1.5.0:
+    resolution: {integrity: sha512-eMRq9WDYd+E0IZ8EG/8iCozZJl511z6vp7kxZyxjDw77ggOZ7bThFpJ72Kztjs8sh0hoe+xhFyZmoqAdVE/Ziw==}
+
+  bare-os@3.9.3:
+    resolution: {integrity: sha512-fF4Q7QsyKVF5Rj0qvI8BgUNjqzC2JvQlpTaPLjVJVxYVUX5Zr9un+y3w1HmA4nNKdFmRBT8z/WmrjvXzXVerKQ==}
+    engines: {bare: '>=1.14.0'}
+
+  bare-path@3.1.1:
+    resolution: {integrity: sha512-JprUlveX3QjApC1cTpsUOiscADftCGVWkzitbHsRqv84hzYwYHw2mbluddsq5TvI8mH/8Ov1f4BiMAdcB0oYnQ==}
+
+  bare-performance@2.1.1:
+    resolution: {integrity: sha512-nVlulswnYgXS2Fkbk4ZIKgfIWY/rmeG8ljM9aryPYClgPNzpOgOSLQzVSgU/K+ReLJHq7fEUQ9SBdjEs1QTIfw==}
+    engines: {bare: '>=1.27.0'}
+
+  bare-pipe@4.2.3:
+    resolution: {integrity: sha512-MJYji+Vy8cNMAB2fwg1WQAm1hFIOe5ojw5V9EhEa/wEEYpKT8c36WjHBDwgkgAZfUSX6wQcEFX+Q7wN09SgRow==}
+    engines: {bare: '>=1.16.0'}
+
+  bare-posix@1.0.1:
+    resolution: {integrity: sha512-b4quA8dyRVvX0aFIAIiev5zFATHwIUGr42Gmt+CqiBNg/bdsNkrj4bbkeotMOMiljJS4DCME5kywJO/TFwKo1A==}
+
+  bare-process@4.5.1:
+    resolution: {integrity: sha512-CaAvy1trputD49mtwfJ6G75vydhnirLrW/F3Sznp4H556e1uZn8YMo9ELicBTrGYy7RBNUgPl9bpB/ERzRCiDw==}
+
+  bare-punycode@0.0.0:
+    resolution: {integrity: sha512-PC2Y6mGLytZPJCB9M7CvO5Zb6uWYVUZ+5t3L6vePFuFM6tdC6SsQ+sIsuf0Sa6LHBoWURX7I9yMMbPXMv7TIdQ==}
+
+  bare-querystring@1.1.0:
+    resolution: {integrity: sha512-pUtEM6JrX53MbEJFwO92F0Ch7BwZ67KD7LyglcB8/tvkkVdwTgN1f7oIklRe+NTT/WCYZgwjDFYS9efBxDSq8g==}
+
+  bare-readline@1.3.1:
+    resolution: {integrity: sha512-QtSU4ZfgQcDI6AQssjDFqTiRe4rCiciMn+Yqx6siMJZBIftAIFrNSOK0sa5SBrmNv/a7CD9Dm0onUDCRyn5Fdg==}
+
+  bare-realm@2.0.1:
+    resolution: {integrity: sha512-kQbYU6AAQu4XBTQesuz2+PpjBx7MJzf5Qw3nSLzQCzbVglx7Ml85MtWEjUe1AeslXqrd+nFPHMEbL55ouISscA==}
+    engines: {bare: '>=1.5.0'}
+
+  bare-repl@6.1.1:
+    resolution: {integrity: sha512-vV52s+zLcwf9WB6y09KwHrqHrCR0UUgcKz3NPhPAwmO62ctFYbBfjskBch92wWk7vRrF68dHJj3hmYNCe8d18g==}
+
+  bare-semver@1.1.0:
+    resolution: {integrity: sha512-1Hw5qJ7hXdVt3uPUqjeFTuxyvBUJauvz5A1I2jk8gzjZMHp04n//6nV9MDbG9CMw78JHY2lGV0w6s//LrASm2w==}
+
+  bare-signals@5.0.0:
+    resolution: {integrity: sha512-8Gn8bBFUh2AUCJ9wWWFjSGWIo1HIUSIQnXRJGSm/f7GCDMqsuJhRmR1dT+HtDaDBkeu2l8Koxt2JLurfJ5yHVw==}
+    engines: {bare: '>=1.7.0'}
+
+  bare-sqlite@0.1.4:
+    resolution: {integrity: sha512-h2UdmQohSQG98lrMZ31PnhKIZRNT+1cDUZRzboHmsXKp+l4N4UBSJylMDEGL+D4fw6MJfOHWFIzUG20pITGy8Q==}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-stdio@1.0.3:
+    resolution: {integrity: sha512-8BRMx7RWMWCbBmKhyHgBco62J+Pgss7+EPI21L3R9+w0UpwDYWUUcbE0YTOesGyt7M6N7VtoshYbzwrP0pI52Q==}
+
+  bare-stream@2.13.3:
+    resolution: {integrity: sha512-Kc+brLqvEqGkjyfiwJmImAOqLZL7OsoLKuavx+hJjgVV3nLTOjloJyPMFxjUPerGGHrNH0fLU06jjykMLWrERQ==}
+    peerDependencies:
+      bare-abort-controller: '*'
+      bare-buffer: '*'
+      bare-events: '*'
+    peerDependenciesMeta:
+      bare-abort-controller:
+        optional: true
+      bare-buffer:
+        optional: true
+      bare-events:
+        optional: true
+
+  bare-string-decoder@1.0.0:
+    resolution: {integrity: sha512-FjFvfHo88U7borNQSj9ijP2JTb1asqY6K28OZrix4dF9iZf5D2wi1+99CgLlHT3HtYqdwxRhDAiKu8rVstt5rQ==}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-structured-clone@1.6.0:
+    resolution: {integrity: sha512-AZjEERyqF7kAuudlmgrweT2KwwWM0LsGG4Gx/bWyFwJrKU7E3wNG8c09z2DIrdw93p3vDtfOX8fyHOcXfy5m+g==}
+    engines: {bare: '>=1.2.0'}
+
+  bare-stylize@0.0.1:
+    resolution: {integrity: sha512-l3MjmIl476bWijYWf3RbE+osl4iuXSOMudzp0vAqzIK7gPgn/+G3oAxp8Oin9CFF911KBP0LO9kts8Ci8mGZaQ==}
+
+  bare-subprocess@6.1.0:
+    resolution: {integrity: sha512-8L6KtbmreDy4Fc1BdDqaDo9fg0nbedUmTSFQxYPV0uHIM2BBAX8+E0LyMDKgkk0I+mlKto80WYzOnIhT8VDdOg==}
+    engines: {bare: '>=1.7.0'}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-system-logger@1.0.3:
+    resolution: {integrity: sha512-HXTXZyhIIS4ZDYun4J9zKNQZDfLgEkkK8wy9nrTFJE5xq8APsOhDxuEsxP0YcNwC23DW1jaNpqD51zDeXPzIdg==}
+
+  bare-tcp@2.5.4:
+    resolution: {integrity: sha512-o3weBBYeN3tgvTJyglSMpZOfHkfz1nG53M913fvhAKF9ubQ4XsljdX6Uq7H0g/CkyGnR4Ii3OdXJHz7PxgDLGA==}
+    engines: {bare: '>=1.16.0'}
+    peerDependencies:
+      bare-pipe: '*'
+    peerDependenciesMeta:
+      bare-pipe:
+        optional: true
+
+  bare-thread@1.2.4:
+    resolution: {integrity: sha512-MnqMCGVp2JJJNXgwUBC8hw+J4FrTeLkLgfCPPl5tQK6MbtV2Efi6LKK5v819VRY0da+AXlCbgssbAVge31NfRg==}
+
+  bare-timers@3.2.1:
+    resolution: {integrity: sha512-O+9e6Jol/BoYsQUzAFXG0gWUW1GWryFMblGcNBfi3smPrD3rJIKQwpw2FJARl2j/1VHne4a8YaHPK1cxDKfiYQ==}
+    engines: {bare: '>=1.7.0'}
+    peerDependencies:
+      bare-abort-controller: '*'
+    peerDependenciesMeta:
+      bare-abort-controller:
+        optional: true
+
+  bare-tls@3.1.8:
+    resolution: {integrity: sha512-NVQHioaEzmz6U2CLFRl34c9vTpf01BMkKCCTJWybF/eTKB97kapkZZTrd7bB11rG5W3uiwndsd7pcSPONVx4Ng==}
+    engines: {bare: '>=1.7.0'}
+
+  bare-tty@5.1.2:
+    resolution: {integrity: sha512-wDHPU/yVQtrDCUrKVdIVOLmfIw7dFPETz30UayuFlROvgz8Juv2SmISSMhqxYQVO+fVnG/1ZoLcbGh/35eAjDA==}
+    engines: {bare: '>=1.16.0'}
+
+  bare-type-stripper@0.1.4:
+    resolution: {integrity: sha512-FdZhp9XEnQpj8AWFmIft/sVUyKS9XSmB6PhcxBHhuEDxxZM5Kkt8+kFS7eEpLXR7TkaRkNpSENoGH/8lpAmtkA==}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-type@1.1.0:
+    resolution: {integrity: sha512-LdtnnEEYldOc87Dr4GpsKnStStZk3zfgoEMXy8yvEZkXrcCv9RtYDrUYWFsBQHtaB0s1EUWmcvS6XmEZYIj3Bw==}
+    engines: {bare: '>=1.2.0'}
+
+  bare-url@2.5.2:
+    resolution: {integrity: sha512-L13PCJzKG8RGvx8V1/DdMi12ERhC3tprr7/8a94BxpmnRsFqxh5XZNdhtMxu5HPkRshYOOWRGY8lDP7ZhpG9Cg==}
+
+  bare-utils@1.6.0:
+    resolution: {integrity: sha512-WhQEIkkAxkSnW7u1QgrI0AfNm5JpMruETXeYsb5qnkBJ0TTfNKygZmsh6rkoHBANaV+C/7Jed7bJP9OmEHG7rQ==}
+
+  bare-v8@1.0.1:
+    resolution: {integrity: sha512-/cR5ZvFWQRdtTZ4tx0j7TKvTWce8UnnLqm88fwHtJmfM7HODIBVjQGDT7KkDLeD2d/eHP2pzB71Y8/QyiMMKrQ==}
+
+  bare-vm@1.0.1:
+    resolution: {integrity: sha512-yLnbRvKt3AhRTmtfTIrYfdTHqGEfIJc+Fgb2DcHejE0HJ+p5adGxxPMvd3893Z7iXVYnalxukNARn4oJSZELHQ==}
+
+  bare-worker@4.4.0:
+    resolution: {integrity: sha512-zSc1biis9ks03nj/24M7tYS2V0CPhefizzRIxVYdglbbUAgA0zakwSgTKLJshZ6P+9NA55M/eG4k/rBALZVbxg==}
+
+  bare-ws@3.0.0:
+    resolution: {integrity: sha512-q2v0UIQ0cFQBXQMp+0FRaoSk1EoYgOhzO7yio0TqBV6Rkfot97mbBYxb1ssw5faVCisVaFxQYY8113SMLYQBow==}
+    peerDependencies:
+      bare-buffer: '*'
+      bare-url: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+      bare-url:
+        optional: true
+
+  bare-zlib@1.4.1:
+    resolution: {integrity: sha512-CsnQl+XyLaUecB9/OUpjqmemung10M7J2UNXz+6NAVrZAI3HC9c5Kxw34aI0jaU9+gb2yUCD31hOrtPZlnE3bA==}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
   baseline-browser-mapping@2.11.18:
     resolution: {integrity: sha512-1iEmLEYSiE1SeBoAfPo/Mnx3PzfzHUkDK61ASkCpuk3YXugYLH5DYK1SzqV55F8FMI6s0F+/tCP7Polz1QRjxw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+
+  bip39@3.1.0:
+    resolution: {integrity: sha512-c9kiwdk45Do5GL0vJMe7tS95VjCii65mYAH7DfWl3uW8AVzXKQVUm64i3hzVybBDMp9r7j9iNxR85+ul8MdN/A==}
 
   brace-expansion@1.1.18:
     resolution: {integrity: sha512-Edep/X9fGqVNmzKBVsDYIOtD+z1tuezV70LBjdCst9Tqu76lsnvRiZ6oTic1n+/BIwX6QDGAO94PN4N2SADvtw==}
@@ -886,6 +1315,9 @@ packages:
 
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+
+  compact-encoding@3.3.2:
+    resolution: {integrity: sha512-bgZ84oVSzjQmVHXBYWON+wQUkdVflrr8fM5+0X6UwQHZyzolsGIkdsjNK3vLLn22dhdASGFz5mS6Lf7rfrPdlg==}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -1130,8 +1562,18 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
 
+  ethers@6.17.0:
+    resolution: {integrity: sha512-BpyrpIPJ3ydEVow8zGaz1DuPS7YU8DcWxuBnY9a0UA/lvAPwrMr+EPXsfrul628SRaekPNeIM4UFh/91GWZang==}
+    engines: {node: '>=14.0.0'}
+
+  events-universal@1.0.1:
+    resolution: {integrity: sha512-LUd5euvbMLpwOF8m6ivPCbhQeSiYVNb8Vs0fQ8QjXo0JTkEHpz8pxdQf0gStltaPpw0Cca8b39KxvK9cfKRiAw==}
+
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
+
+  fast-fifo@1.3.2:
+    resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
 
   fast-glob@3.3.1:
     resolution: {integrity: sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg==}
@@ -1738,6 +2180,10 @@ packages:
     resolution: {integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==}
     engines: {node: '>= 0.4'}
 
+  require-addon@1.2.0:
+    resolution: {integrity: sha512-VNPDZlYgIYQwWp9jMTzljx+k0ZtatKlcvOhktZ/anNPI3dQ9NXk7cq2U4iJ1wd9IrytRnYhyEocFWbkdPb+MYA==}
+    engines: {bare: '>=1.10.0'}
+
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
     engines: {node: '>=4'}
@@ -1780,6 +2226,9 @@ packages:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
+
+  server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -1826,6 +2275,18 @@ packages:
     resolution: {integrity: sha512-6x6dK6zJdpTzF4sQeNYxwtvBzf6Eg4GtlesS94HOvTudUeyK2WXAaIfmDgsyslYrRBeFIlsi54AYsFGUuhmvrQ==}
     engines: {node: '>= 0.4'}
 
+  sodium-native@5.1.0:
+    resolution: {integrity: sha512-3RxgyWyJlhTsABPnJVpCI5CoTDANZTqqFrEPqr+kjfnRaBihpVtMUE3yTF40ukdoB1APXeoBNKF3MzZAIHg39g==}
+    engines: {bare: '>=1.16.0'}
+
+  sodium-universal@5.0.1:
+    resolution: {integrity: sha512-rv+aH+tnKB5H0MAc2UadHShLMslpJsc4wjdnHRtiSIEYpOetCgu8MS4ExQRia+GL/MK3uuCyZPeEsi+J3h+Q+Q==}
+    peerDependencies:
+      sodium-javascript: ~0.8.0
+    peerDependenciesMeta:
+      sodium-javascript:
+        optional: true
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -1836,6 +2297,9 @@ packages:
   stop-iteration-iterator@1.1.0:
     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
     engines: {node: '>= 0.4'}
+
+  streamx@2.28.0:
+    resolution: {integrity: sha512-1Yowhzjf0ivGMrTIkY9hav5TxobO9qIVqUE41fiCGMGgc3CLlf4MY+9AHmZqBWgDTue0fY9zWjYFVyf6Diuobw==}
 
   string.prototype.includes@2.0.1:
     resolution: {integrity: sha512-o7+c9bW6zpAdJHTtujeePODAhkuicdAryFsfVKwA+wGw89wJ4GTY484WTucM9hLtDEOpOvI+aHnzqnC5lHp4Rg==}
@@ -1896,6 +2360,12 @@ packages:
     resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
     engines: {node: '>=6'}
 
+  teex@1.0.1:
+    resolution: {integrity: sha512-eYE6iEI62Ni1H8oIa7KlDU6uQBtqr4Eajni3wX7rpfXD8ysFx8z0+dri+KWEPWpBsxXfxu58x/0jvTVT1ekOSg==}
+
+  text-decoder@1.2.7:
+    resolution: {integrity: sha512-vlLytXkeP4xvEq2otHeJfSQIRyWxo/oZGEbXrtEEF9Hnmrdly59sUbzZ/QgyWuLYHctCHxFF4tRQZNQ9k60ExQ==}
+
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
@@ -1912,6 +2382,9 @@ packages:
 
   tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
+
+  tslib@2.7.0:
+    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -1948,9 +2421,16 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  udx-native@1.21.1:
+    resolution: {integrity: sha512-Z35jgnF9+4wHRaR9ulypUKOSEwNqksPxW/bJDOzNN4ERyVxzhPOvokjY3Zoi7B+rnD/LLXDYGiPMnPUxXL961g==}
+    engines: {bare: '>=1.17.4'}
+
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
     engines: {node: '>= 0.4'}
+
+  undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
@@ -1979,6 +2459,9 @@ packages:
     resolution: {integrity: sha512-K4jVyjnBdgvc86Y6BkaLZEN933SwYOuBFkdmBu9ZfkcAbdVbpITnDmjvZ/aQjRXQrv5EPkTnD1s39GiiqbngCw==}
     engines: {node: '>= 0.4'}
 
+  which-runtime@1.4.0:
+    resolution: {integrity: sha512-0ugbP4CJW4e2D20jvEcC4973dCgIaHI4Rw1PT+26U9zEve7FyYdWAIwUnoeOYvoCfn+wXHoHTKb1KhkYlb60Pw==}
+
   which-typed-array@1.1.22:
     resolution: {integrity: sha512-fvO4ExWMFsqyhG3AiPAObMuY1lxaqgYcxbc49CNdWDDECOJNgQyvsOWVwbZc+qf3rzRtxojBK+CMEv0Ld5CYpw==}
     engines: {node: '>= 0.4'}
@@ -1991,6 +2474,18 @@ packages:
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
+
+  ws@8.21.0:
+    resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -2009,6 +2504,8 @@ packages:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
 snapshots:
+
+  '@adraffy/ens-normalize@1.11.1': {}
 
   '@alloc/quick-lru@5.2.0': {}
 
@@ -2366,6 +2863,16 @@ snapshots:
   '@next/swc-win32-x64-msvc@16.3.2':
     optional: true
 
+  '@noble/curves@1.2.0':
+    dependencies:
+      '@noble/hashes': 1.3.2
+
+  '@noble/hashes@1.3.2': {}
+
+  '@noble/hashes@1.8.0': {}
+
+  '@noble/secp256k1@2.2.3': {}
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -2455,6 +2962,49 @@ snapshots:
       postcss: 8.5.26
       tailwindcss: 4.3.3
 
+  '@tetherto/wdk-failover-provider@1.0.0-beta.2': {}
+
+  '@tetherto/wdk-wallet-evm@1.0.0-beta.17(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))(bare-url@2.5.2)':
+    dependencies:
+      '@noble/hashes': 1.8.0
+      '@noble/secp256k1': 2.2.3
+      '@tetherto/wdk-failover-provider': 1.0.0-beta.2
+      '@tetherto/wdk-wallet': 1.0.0-beta.17(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))
+      bare-node-runtime: 1.5.0(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))
+      bip39: 3.1.0
+      ethers: 6.17.0
+      sodium-universal: 5.0.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-url@2.5.2)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - bare-pipe
+      - bare-tcp
+      - bare-url
+      - bufferutil
+      - react-native-b4a
+      - sodium-javascript
+      - utf-8-validate
+
+  '@tetherto/wdk-wallet@1.0.0-beta.17(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))':
+    dependencies:
+      bare-node-runtime: 1.5.0(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))
+      bip39: 3.1.0
+    transitivePeerDependencies:
+      - bare-pipe
+      - bare-tcp
+      - react-native-b4a
+
+  '@tetherto/wdk@1.0.0-beta.16(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))':
+    dependencies:
+      '@tetherto/wdk-wallet': 1.0.0-beta.17(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))
+      bare-node-runtime: 1.5.0(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))
+      zod: 4.4.3
+    transitivePeerDependencies:
+      - bare-pipe
+      - bare-tcp
+      - react-native-b4a
+
   '@tybys/wasm-util@0.10.3':
     dependencies:
       tslib: 2.8.1
@@ -2469,6 +3019,10 @@ snapshots:
   '@types/node@20.19.43':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/node@22.7.5':
+    dependencies:
+      undici-types: 6.19.8
 
   '@types/react-dom@19.2.4(@types/react@19.2.18)':
     dependencies:
@@ -2645,6 +3199,8 @@ snapshots:
 
   acorn@8.18.0: {}
 
+  aes-js@4.0.0-beta.5: {}
+
   ajv@6.15.0:
     dependencies:
       fast-deep-equal: 3.1.3
@@ -2739,11 +3295,610 @@ snapshots:
 
   axobject-query@4.1.0: {}
 
+  b4a@1.8.1: {}
+
   balanced-match@1.0.2: {}
 
   balanced-match@4.0.4: {}
 
+  bare-abort-controller@1.1.2:
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+
+  bare-abort@2.0.13: {}
+
+  bare-addon-resolve@1.10.1(bare-url@2.5.2):
+    dependencies:
+      bare-module-resolve: 1.12.4(bare-url@2.5.2)
+      bare-semver: 1.1.0
+    optionalDependencies:
+      bare-url: 2.5.2
+
+  bare-ansi-escapes@2.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    optionalDependencies:
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-events
+      - react-native-b4a
+
+  bare-assert@1.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-inspect: 3.1.5(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-async-hooks@0.0.0: {}
+
+  bare-broadcast-channel@0.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-structured-clone: 1.6.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-buffer@3.7.0: {}
+
+  bare-bundle@1.10.0(bare-buffer@3.7.0)(bare-url@2.5.2):
+    optionalDependencies:
+      bare-buffer: 3.7.0
+      bare-url: 2.5.2
+
+  bare-channel@5.2.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-structured-clone: 1.6.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-console@6.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-format: 1.0.2(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-hrtime: 2.1.1
+      bare-logger: 2.0.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-system-logger: 1.0.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-type: 1.1.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-crypto@1.15.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-assert: 1.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    optionalDependencies:
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-events
+      - react-native-b4a
+
+  bare-debug-log@2.0.0:
+    dependencies:
+      bare-os: 3.9.3
+
+  bare-dgram@1.0.1(bare-abort-controller@1.1.2)(bare-url@2.5.2):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      udx-native: 1.21.1(bare-abort-controller@1.1.2)(bare-url@2.5.2)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-url
+      - react-native-b4a
+
+  bare-diagnostics-channel@1.1.0: {}
+
+  bare-dns@2.1.4: {}
+
+  bare-encoding@1.0.3(bare-buffer@3.7.0):
+    optionalDependencies:
+      bare-buffer: 3.7.0
+
+  bare-env@3.0.1:
+    dependencies:
+      bare-os: 3.9.3
+
+  bare-events@2.9.1(bare-abort-controller@1.1.2):
+    optionalDependencies:
+      bare-abort-controller: 1.1.2
+
+  bare-fetch@3.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)):
+    dependencies:
+      bare-form-data: 1.2.2(bare-abort-controller@1.1.2)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-http1: 4.5.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-https: 3.0.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-mime: 1.0.0
+      bare-performance: 2.1.1(bare-abort-controller@1.1.2)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-url: 2.5.2
+      bare-zlib: 1.4.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    optionalDependencies:
+      bare-abort-controller: 1.1.2
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - bare-events
+      - bare-pipe
+      - react-native-b4a
+
+  bare-form-data@1.2.2(bare-abort-controller@1.1.2)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-buffer: 3.7.0
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-events
+      - react-native-b4a
+
+  bare-format@1.0.2(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-inspect: 3.1.5(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-fs@4.8.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-path: 3.1.1
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-url: 2.5.2
+      fast-fifo: 1.3.2
+    optionalDependencies:
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - react-native-b4a
+
+  bare-hrtime@2.1.1: {}
+
+  bare-http-parser@1.1.5: {}
+
+  bare-http1@4.5.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-http-parser: 1.1.5
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-tcp: 2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))
+    optionalDependencies:
+      bare-buffer: 3.7.0
+      bare-url: 2.5.2
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-pipe
+      - react-native-b4a
+
+  bare-https@3.0.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2):
+    dependencies:
+      bare-http1: 4.5.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-tcp: 2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))
+      bare-tls: 3.1.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - bare-pipe
+      - bare-url
+      - react-native-b4a
+
+  bare-inspect@3.1.5(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-ansi-escapes: 2.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-type: 1.1.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-inspector@6.1.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-http1: 4.5.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-url: 2.5.2
+      bare-ws: 3.0.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+    optionalDependencies:
+      bare-tcp: 2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-pipe
+      - react-native-b4a
+
+  bare-logger@2.0.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-format: 1.0.2(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-mime@1.0.0: {}
+
+  bare-module-lexer@1.6.3(bare-buffer@3.7.0)(bare-url@2.5.2):
+    dependencies:
+      require-addon: 1.2.0(bare-url@2.5.2)
+    optionalDependencies:
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - bare-url
+
+  bare-module-resolve@1.12.4(bare-url@2.5.2):
+    dependencies:
+      bare-semver: 1.1.0
+    optionalDependencies:
+      bare-url: 2.5.2
+
+  bare-module-traverse@2.4.4(bare-buffer@3.7.0)(bare-url@2.5.2):
+    dependencies:
+      bare-addon-resolve: 1.10.1(bare-url@2.5.2)
+      bare-mime: 1.0.0
+      bare-module-lexer: 1.6.3(bare-buffer@3.7.0)(bare-url@2.5.2)
+      bare-module-resolve: 1.12.4(bare-url@2.5.2)
+    optionalDependencies:
+      bare-buffer: 3.7.0
+      bare-url: 2.5.2
+
+  bare-module@6.4.0(bare-buffer@3.7.0):
+    dependencies:
+      bare-bundle: 1.10.0(bare-buffer@3.7.0)(bare-url@2.5.2)
+      bare-module-lexer: 1.6.3(bare-buffer@3.7.0)(bare-url@2.5.2)
+      bare-module-resolve: 1.12.4(bare-url@2.5.2)
+      bare-path: 3.1.1
+      bare-type-stripper: 0.1.4(bare-buffer@3.7.0)(bare-url@2.5.2)
+      bare-url: 2.5.2
+    optionalDependencies:
+      bare-buffer: 3.7.0
+
+  bare-net@2.3.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-pipe: 4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-tcp: 2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-node-runtime@1.5.0(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))):
+    dependencies:
+      bare-abort-controller: 1.1.2
+      bare-assert: 1.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-async-hooks: 0.0.0
+      bare-buffer: 3.7.0
+      bare-console: 6.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-crypto: 1.15.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-dgram: 1.0.1(bare-abort-controller@1.1.2)(bare-url@2.5.2)
+      bare-diagnostics-channel: 1.1.0
+      bare-dns: 2.1.4
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-fetch: 3.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))
+      bare-fs: 4.8.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-http1: 4.5.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-https: 3.0.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-inspector: 6.1.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)))
+      bare-module: 6.4.0(bare-buffer@3.7.0)
+      bare-net: 2.3.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-os: 3.9.3
+      bare-path: 3.1.1
+      bare-performance: 2.1.1(bare-abort-controller@1.1.2)
+      bare-process: 4.5.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-punycode: 0.0.0
+      bare-querystring: 1.1.0
+      bare-readline: 1.3.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-repl: 6.1.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-sqlite: 0.1.4(bare-buffer@3.7.0)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-string-decoder: 1.0.0(bare-buffer@3.7.0)
+      bare-subprocess: 6.1.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-timers: 3.2.1(bare-abort-controller@1.1.2)
+      bare-tls: 3.1.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-tty: 5.1.2(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-url: 2.5.2
+      bare-utils: 1.6.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-v8: 1.0.1
+      bare-vm: 1.0.1
+      bare-worker: 4.4.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-ws: 3.0.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-zlib: 1.4.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-pipe
+      - bare-tcp
+      - react-native-b4a
+
+  bare-os@3.9.3: {}
+
+  bare-path@3.1.1: {}
+
+  bare-performance@2.1.1(bare-abort-controller@1.1.2):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+    transitivePeerDependencies:
+      - bare-abort-controller
+
+  bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-posix@1.0.1: {}
+
+  bare-process@4.5.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-abort: 2.0.13
+      bare-env: 3.0.1
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-hrtime: 2.1.1
+      bare-os: 3.9.3
+      bare-posix: 1.0.1
+      bare-signals: 5.0.0(bare-abort-controller@1.1.2)
+      bare-stdio: 1.0.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-punycode@0.0.0:
+    dependencies:
+      punycode: 2.3.1
+
+  bare-querystring@1.1.0: {}
+
+  bare-readline@1.3.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-ansi-escapes: 2.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-realm@2.0.1: {}
+
+  bare-repl@6.1.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-inspect: 3.1.5(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-module: 6.4.0(bare-buffer@3.7.0)
+      bare-path: 3.1.1
+      bare-pipe: 4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-readline: 1.3.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-tty: 5.1.2(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-semver@1.1.0: {}
+
+  bare-signals@5.0.0(bare-abort-controller@1.1.2):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+    transitivePeerDependencies:
+      - bare-abort-controller
+
+  bare-sqlite@0.1.4(bare-buffer@3.7.0):
+    optionalDependencies:
+      bare-buffer: 3.7.0
+
+  bare-stdio@1.0.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-fs: 4.8.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-pipe: 4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-tty: 5.1.2(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-stream@2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      b4a: 1.8.1
+      streamx: 2.28.0(bare-abort-controller@1.1.2)
+      teex: 1.0.1(bare-abort-controller@1.1.2)
+    optionalDependencies:
+      bare-abort-controller: 1.1.2
+      bare-buffer: 3.7.0
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+    transitivePeerDependencies:
+      - react-native-b4a
+
+  bare-string-decoder@1.0.0(bare-buffer@3.7.0):
+    dependencies:
+      text-decoder: 1.2.7
+    optionalDependencies:
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - react-native-b4a
+
+  bare-structured-clone@1.6.0:
+    dependencies:
+      bare-buffer: 3.7.0
+      bare-type: 1.1.0
+      bare-url: 2.5.2
+      compact-encoding: 3.3.2
+    transitivePeerDependencies:
+      - react-native-b4a
+
+  bare-stylize@0.0.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-ansi-escapes: 2.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-process: 4.5.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-subprocess@6.1.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-env: 3.0.1
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-os: 3.9.3
+      bare-pipe: 4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-structured-clone: 1.6.0
+      bare-tcp: 2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))
+      bare-url: 2.5.2
+    optionalDependencies:
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - react-native-b4a
+
+  bare-system-logger@1.0.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-logger: 2.0.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-tcp@2.5.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)):
+    dependencies:
+      bare-dns: 2.1.4
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    optionalDependencies:
+      bare-pipe: 4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-thread@1.2.4(bare-buffer@3.7.0):
+    dependencies:
+      bare-bundle: 1.10.0(bare-buffer@3.7.0)(bare-url@2.5.2)
+      bare-module-resolve: 1.12.4(bare-url@2.5.2)
+      bare-module-traverse: 2.4.4(bare-buffer@3.7.0)(bare-url@2.5.2)
+      bare-url: 2.5.2
+    transitivePeerDependencies:
+      - bare-buffer
+
+  bare-timers@3.2.1(bare-abort-controller@1.1.2):
+    optionalDependencies:
+      bare-abort-controller: 1.1.2
+
+  bare-tls@3.1.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-net: 2.3.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-tty@5.1.2(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-signals: 5.0.0(bare-abort-controller@1.1.2)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-type-stripper@0.1.4(bare-buffer@3.7.0)(bare-url@2.5.2):
+    dependencies:
+      require-addon: 1.2.0(bare-url@2.5.2)
+    optionalDependencies:
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - bare-url
+
+  bare-type@1.1.0: {}
+
+  bare-url@2.5.2:
+    dependencies:
+      bare-path: 3.1.1
+
+  bare-utils@1.6.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-debug-log: 2.0.0
+      bare-encoding: 1.0.3(bare-buffer@3.7.0)
+      bare-format: 1.0.2(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-inspect: 3.1.5(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-stylize: 0.0.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-type: 1.1.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - react-native-b4a
+
+  bare-v8@1.0.1: {}
+
+  bare-vm@1.0.1:
+    dependencies:
+      bare-realm: 2.0.1
+
+  bare-worker@4.4.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0):
+    dependencies:
+      bare-broadcast-channel: 0.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-channel: 5.2.4(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-module: 6.4.0(bare-buffer@3.7.0)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-thread: 1.2.4(bare-buffer@3.7.0)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
+  bare-ws@3.0.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2):
+    dependencies:
+      bare-crypto: 1.15.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      bare-http1: 4.5.8(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-https: 3.0.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-pipe@4.2.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0))(bare-url@2.5.2)
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    optionalDependencies:
+      bare-buffer: 3.7.0
+      bare-url: 2.5.2
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-pipe
+      - react-native-b4a
+
+  bare-zlib@1.4.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2)):
+    dependencies:
+      bare-stream: 2.13.3(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+    optionalDependencies:
+      bare-buffer: 3.7.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-events
+      - react-native-b4a
+
   baseline-browser-mapping@2.11.18: {}
+
+  bip39@3.1.0:
+    dependencies:
+      '@noble/hashes': 1.8.0
 
   brace-expansion@1.1.18:
     dependencies:
@@ -2799,6 +3954,12 @@ snapshots:
       color-name: 1.1.4
 
   color-name@1.1.4: {}
+
+  compact-encoding@3.3.2:
+    dependencies:
+      b4a: 1.8.1
+    transitivePeerDependencies:
+      - react-native-b4a
 
   concat-map@0.0.1: {}
 
@@ -3195,7 +4356,28 @@ snapshots:
 
   esutils@2.0.3: {}
 
+  ethers@6.17.0:
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.1
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@types/node': 22.7.5
+      aes-js: 4.0.0-beta.5
+      tslib: 2.7.0
+      ws: 8.21.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  events-universal@1.0.1(bare-abort-controller@1.1.2):
+    dependencies:
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+    transitivePeerDependencies:
+      - bare-abort-controller
+
   fast-deep-equal@3.1.3: {}
+
+  fast-fifo@1.3.2: {}
 
   fast-glob@3.3.1:
     dependencies:
@@ -3793,6 +4975,12 @@ snapshots:
       gopd: 1.2.0
       set-function-name: 2.0.2
 
+  require-addon@1.2.0(bare-url@2.5.2):
+    dependencies:
+      bare-addon-resolve: 1.10.1(bare-url@2.5.2)
+    transitivePeerDependencies:
+      - bare-url
+
   resolve-from@4.0.0: {}
 
   resolve-pkg-maps@1.0.0: {}
@@ -3836,6 +5024,8 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.8.5: {}
+
+  server-only@0.0.1: {}
 
   set-function-length@1.2.2:
     dependencies:
@@ -3927,6 +5117,28 @@ snapshots:
       side-channel-map: 1.0.1
       side-channel-weakmap: 1.0.2
 
+  sodium-native@5.1.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-url@2.5.2):
+    dependencies:
+      bare-assert: 1.2.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))
+      require-addon: 1.2.0(bare-url@2.5.2)
+      which-runtime: 1.4.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - bare-url
+      - react-native-b4a
+
+  sodium-universal@5.0.1(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-url@2.5.2):
+    dependencies:
+      sodium-native: 5.1.0(bare-abort-controller@1.1.2)(bare-buffer@3.7.0)(bare-events@2.9.1(bare-abort-controller@1.1.2))(bare-url@2.5.2)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - bare-url
+      - react-native-b4a
+
   source-map-js@1.2.1: {}
 
   stable-hash@0.0.5: {}
@@ -3935,6 +5147,15 @@ snapshots:
     dependencies:
       es-errors: 1.3.0
       internal-slot: 1.1.0
+
+  streamx@2.28.0(bare-abort-controller@1.1.2):
+    dependencies:
+      events-universal: 1.0.1(bare-abort-controller@1.1.2)
+      fast-fifo: 1.3.2
+      text-decoder: 1.2.7
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - react-native-b4a
 
   string.prototype.includes@2.0.1:
     dependencies:
@@ -4008,6 +5229,19 @@ snapshots:
 
   tapable@2.3.3: {}
 
+  teex@1.0.1(bare-abort-controller@1.1.2):
+    dependencies:
+      streamx: 2.28.0(bare-abort-controller@1.1.2)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - react-native-b4a
+
+  text-decoder@1.2.7:
+    dependencies:
+      b4a: 1.8.1
+    transitivePeerDependencies:
+      - react-native-b4a
+
   tinyglobby@0.2.17:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.5)
@@ -4027,6 +5261,8 @@ snapshots:
       json5: 1.0.2
       minimist: 1.2.8
       strip-bom: 3.0.0
+
+  tslib@2.7.0: {}
 
   tslib@2.8.1: {}
 
@@ -4080,12 +5316,25 @@ snapshots:
 
   typescript@5.9.3: {}
 
+  udx-native@1.21.1(bare-abort-controller@1.1.2)(bare-url@2.5.2):
+    dependencies:
+      b4a: 1.8.1
+      bare-events: 2.9.1(bare-abort-controller@1.1.2)
+      require-addon: 1.2.0(bare-url@2.5.2)
+      streamx: 2.28.0(bare-abort-controller@1.1.2)
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-url
+      - react-native-b4a
+
   unbox-primitive@1.1.0:
     dependencies:
       call-bound: 1.0.4
       has-bigints: 1.1.0
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
+
+  undici-types@6.19.8: {}
 
   undici-types@6.21.0: {}
 
@@ -4157,6 +5406,8 @@ snapshots:
       is-weakmap: 2.0.2
       is-weakset: 2.0.4
 
+  which-runtime@1.4.0: {}
+
   which-typed-array@1.1.22:
     dependencies:
       available-typed-arrays: 1.0.7
@@ -4172,6 +5423,8 @@ snapshots:
       isexe: 2.0.0
 
   word-wrap@1.2.5: {}
+
+  ws@8.21.0: {}
 
   yallist@3.1.1: {}
 
