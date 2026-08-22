@@ -89,6 +89,34 @@ export async function listGoals(): Promise<GoalRow[]> {
   return (data ?? []) as GoalRow[];
 }
 
+/** A goal together with what the agent proposed and what actually settled. */
+export type GoalHistoryEntry = GoalRow & {
+  strategies: StrategyRow[];
+  transactions: TransactionRow[];
+};
+
+/**
+ * The audit trail: every goal, its proposals, and the transactions they
+ * produced.
+ *
+ * One nested select rather than three round trips — PostgREST resolves the
+ * children through the foreign keys, so this stays a single query no matter how
+ * many goals come back.
+ */
+export async function listGoalHistory(
+  limit = 20
+): Promise<GoalHistoryEntry[]> {
+  const { data, error } = await getSupabase()
+    .from("goals")
+    .select("*, strategies(*), transactions(*)")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) fail("listGoalHistory", error);
+
+  return (data ?? []) as GoalHistoryEntry[];
+}
+
 export type RecordTransactionInput = {
   goalId: number | null;
   strategyId: number | null;

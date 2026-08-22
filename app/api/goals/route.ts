@@ -4,7 +4,11 @@ import { z } from "zod";
 import { analyzeGoal } from "@/lib/ai/goal-analyzer";
 import { financialGoalSchema } from "@/lib/ai/schemas";
 import { buildStrategy } from "@/lib/ai/strategy-builder";
-import { createGoal, createStrategy, listGoals } from "@/lib/supabase/goals";
+import {
+  createGoal,
+  createStrategy,
+  listGoalHistory,
+} from "@/lib/supabase/goals";
 import { getWalletSnapshot } from "@/lib/wdk/account";
 
 export const runtime = "nodejs";
@@ -13,10 +17,13 @@ export const maxDuration = 120;
 
 export async function GET() {
   try {
-    return NextResponse.json({ goals: await listGoals() });
+    return NextResponse.json({ goals: await listGoalHistory() });
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to list goals." },
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to list goals.",
+      },
       { status: 500 }
     );
   }
