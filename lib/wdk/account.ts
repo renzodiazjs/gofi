@@ -13,6 +13,8 @@ export type Balance = {
 
 export type WalletSnapshot = {
   address: string;
+  /** Account index 1 of the same seed. Strategies fund their position here. */
+  positionAddress: string;
   explorerUrl: string;
   network: {
     key: NetworkKey;
@@ -33,16 +35,23 @@ export async function getWalletSnapshot(
   index = 0
 ): Promise<WalletSnapshot> {
   const config = NETWORKS[network];
-  const account = await getWdk().getAccount(network, index);
-
-  const [address, nativeBalance, usdtBalance] = await Promise.all([
-    account.getAddress(),
-    account.getBalance(),
-    account.getTokenBalance(config.tokens.USDT.address),
+  const wdk = getWdk();
+  const [account, positionAccount] = await Promise.all([
+    wdk.getAccount(network, index),
+    wdk.getAccount(network, index + 1),
   ]);
+
+  const [address, positionAddress, nativeBalance, usdtBalance] =
+    await Promise.all([
+      account.getAddress(),
+      positionAccount.getAddress(),
+      account.getBalance(),
+      account.getTokenBalance(config.tokens.USDT.address),
+    ]);
 
   return {
     address,
+    positionAddress,
     explorerUrl: config.explorerAddressUrl(address),
     network: {
       key: config.key,
