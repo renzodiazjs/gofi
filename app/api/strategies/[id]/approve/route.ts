@@ -4,6 +4,11 @@ import { z } from "zod";
 
 import { DEFAULT_GUARDRAILS } from "@/lib/guardrails/config";
 import {
+  InvalidTicketError,
+  issueTicket,
+  verifyTicket,
+} from "@/lib/security/quote-ticket";
+import {
   getStrategyWithGoal,
   recordTransaction,
   setGoalStatus,
@@ -22,6 +27,8 @@ const bodySchema = z.object({
     .string()
     .regex(/^0x[a-fA-F0-9]{40}$/, "positionAddress must be a 0x EVM address."),
   confirm: z.boolean().default(false),
+  /** The ticket returned with the quote. Required to execute. */
+  ticket: z.string().optional(),
 });
 
 /**
@@ -64,7 +71,7 @@ export async function POST(
     );
   }
 
-  const { positionAddress, confirm } = parsed.data;
+  const { positionAddress, confirm, ticket } = parsed.data;
 
   try {
     const { strategy, goal } = await getStrategyWithGoal(strategyId);
@@ -130,13 +137,30 @@ export async function POST(
       );
     }
 
+    // The claims are derived here, on both paths, from the strategy and the
+    // guardrails — never from the request body. That is what makes the ticket
+    // binding: a client cannot quote one amount and execute another, because
+    // the amount it would have to sign for is not its to choose.
+    const claims = {
+      scope: `strategy:${strategy.id}`,
+      recipient: positionAddress,
+      asset: "USDT",
+      amount: amountString,
+    };
+
     if (!confirm) {
       return NextResponse.json({
         status: "awaiting_confirmation",
         plan,
         quote: await quoteUsdtTransfer({ to: positionAddress, amount: amountString }),
+        ticket: issueTicket(claims),
       });
     }
+
+    // Past this line the wallet signs. The confirmation is only meaningful if
+    // it refers to a quote this server actually issued, so an unverifiable
+    // ticket stops here rather than at the policy engine.
+    verifyTicket(ticket, claims);
 
     const receipt = await sendUsdtTransfer({
       to: positionAddress,
@@ -163,6 +187,10 @@ export async function POST(
 
     return NextResponse.json({ status: "executed", plan, receipt });
   } catch (error) {
+    if (error instanceof InvalidTicketError) {
+      return NextResponse.json({ error: error.message }, { status: 409 });
+    }
+
     if (error instanceof PolicyViolationError) {
       return NextResponse.json(
         {

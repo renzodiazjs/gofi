@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import {
+  InvalidTicketError,
+  issueTicket,
+  verifyTicket,
+} from "@/lib/security/quote-ticket";
+import {
   quoteNativeTransfer,
   quoteUsdtTransfer,
   sendNativeTransfer,
@@ -23,6 +28,8 @@ const bodySchema = z.object({
    * prices the transfer. Nothing is signed until the user approves the quote.
    */
   confirm: z.boolean().default(false),
+  /** The ticket returned with the quote. Required to execute. */
+  ticket: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -43,8 +50,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const { to, amount, asset, confirm } = parsed.data;
+  const { to, amount, asset, confirm, ticket } = parsed.data;
   const native = asset === "ETH";
+
+  const claims = { scope: "transfer", recipient: to, asset, amount };
 
   try {
     if (!confirm) {
@@ -52,8 +61,16 @@ export async function POST(request: Request) {
         ? await quoteNativeTransfer({ to, amount })
         : await quoteUsdtTransfer({ to, amount });
 
-      return NextResponse.json({ status: "quote", quote });
+      return NextResponse.json({
+        status: "quote",
+        quote,
+        ticket: issueTicket(claims),
+      });
     }
+
+    // A confirmation that cannot name the quote it approves is not a
+    // confirmation. Checked before signing, not after.
+    verifyTicket(ticket, claims);
 
     const receipt = native
       ? await sendNativeTransfer({ to, amount })
@@ -61,6 +78,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ status: "sent", receipt });
   } catch (error) {
+    if (error instanceof InvalidTicketError) {
+      return NextResponse.json({ error: error.message }, { status: 409 });
+    }
+
     if (error instanceof PolicyViolationError) {
       return NextResponse.json(
         {

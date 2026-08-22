@@ -32,8 +32,10 @@ type Confirmation = {
 type State =
   | { phase: "idle" }
   | { phase: "quoting" }
-  | { phase: "quoted"; plan: Plan; quote: Quote }
-  | { phase: "executing"; plan: Plan; quote: Quote }
+  // The ticket rides along with the quote: confirming means handing back the
+  // exact quote the server issued, not asserting that one was seen.
+  | { phase: "quoted"; plan: Plan; quote: Quote; ticket: string }
+  | { phase: "executing"; plan: Plan; quote: Quote; ticket: string }
   | {
       phase: "executed";
       plan: Plan;
@@ -99,7 +101,7 @@ export function ApprovalCard({
     }
   }
 
-  async function call(confirm: boolean) {
+  async function call(confirm: boolean, ticket?: string) {
     setError(null);
     setBlockedBy(null);
 
@@ -107,7 +109,7 @@ export function ApprovalCard({
       const response = await fetch(`/api/strategies/${strategy.id}/approve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ positionAddress, confirm }),
+        body: JSON.stringify({ positionAddress, confirm, ticket }),
       });
       const payload = await response.json();
 
@@ -134,7 +136,12 @@ export function ApprovalCard({
         onExecuted();
         void trackConfirmation(payload.plan, payload.receipt);
       } else {
-        setState({ phase: "quoted", plan: payload.plan, quote: payload.quote });
+        setState({
+          phase: "quoted",
+          plan: payload.plan,
+          quote: payload.quote,
+          ticket: payload.ticket,
+        });
       }
     } catch (caught) {
       setState({ phase: "idle" });
@@ -202,7 +209,7 @@ export function ApprovalCard({
               variant="shimmer"
               onClick={() => {
                 setState({ ...state, phase: "executing" });
-                void call(true);
+                void call(true, state.ticket);
               }}
               disabled={busy}
             >
