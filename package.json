@@ -11,6 +11,7 @@
     "wdk:setup": "node scripts/setup-wdk-cli.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.120.0",
     "@supabase/supabase-js": "^2.112.3",
     "@tetherto/wdk": "1.0.0-beta.16",
     "@tetherto/wdk-wallet-evm": "1.0.0-beta.17",
