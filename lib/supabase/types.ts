@@ -76,6 +76,9 @@ export type TransactionRow = {
   fee: number;
   fee_symbol: string;
   status: TransactionStatus;
+  block_number: number | null;
+  confirmed_at: string | null;
+  failure_reason: string | null;
 };
 
 export type GuardrailsInsert = Omit<GuardrailsRow, "id" | "created_at"> & {

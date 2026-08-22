@@ -191,3 +191,68 @@ export async function setGoalStatus(
 
   if (error) fail("setGoalStatus", error);
 }
+
+export async function listPendingTransactions(
+  limit = 25
+): Promise<TransactionRow[]> {
+  const { data, error } = await getSupabase()
+    .from("transactions")
+    .select()
+    .eq("status", "pending")
+    .order("created_at", { ascending: true })
+    .limit(limit);
+
+  if (error) fail("listPendingTransactions", error);
+
+  return (data ?? []) as TransactionRow[];
+}
+
+export async function getTransactionByHash(
+  hash: string
+): Promise<TransactionRow | null> {
+  const { data, error } = await getSupabase()
+    .from("transactions")
+    .select()
+    .eq("hash", hash)
+    .maybeSingle();
+
+  if (error) fail("getTransactionByHash", error);
+
+  return (data as TransactionRow | null) ?? null;
+}
+
+export type ConfirmationUpdate = {
+  status: TransactionRow["status"];
+  blockNumber: number | null;
+  failureReason: string | null;
+};
+
+export async function applyConfirmation(
+  hash: string,
+  update: ConfirmationUpdate
+): Promise<TransactionRow> {
+  const settled = update.status !== "pending";
+
+  const { data, error } = await getSupabase()
+    .from("transactions")
+    .update({
+      status: update.status,
+      block_number: update.blockNumber,
+      confirmed_at: settled ? new Date().toISOString() : null,
+      failure_reason: update.failureReason,
+    })
+    .eq("hash", hash)
+    .select()
+    .single();
+
+  if (error) {
+    if (error.code === "42703" || /column .* does not exist/i.test(error.message)) {
+      throw new Error(
+        "applyConfirmation: the confirmation columns are missing. Run supabase/migrations/0002_transaction_confirmation.sql in the Supabase SQL editor."
+      );
+    }
+    fail("applyConfirmation", error);
+  }
+
+  return data as TransactionRow;
+}
