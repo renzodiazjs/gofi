@@ -1,5 +1,6 @@
 import { GofiApp } from "@/components/gofi-app";
 import { Particles } from "@/components/particles";
+import { Protocols } from "@/components/protocols";
 
 export default function Home() {
   return (
@@ -20,6 +21,8 @@ export default function Home() {
             Turn financial goals into on-chain strategies.
           </p>
         </header>
+
+        <Protocols />
 
         <GofiApp />
 
