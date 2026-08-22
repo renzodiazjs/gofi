@@ -28,6 +28,13 @@ const serverEnvSchema = z.object({
         .filter(Boolean)
     )
     .pipe(z.array(z.url()).min(1, "At least one RPC endpoint is required.")),
+  NEXT_PUBLIC_SUPABASE_URL: z.url("NEXT_PUBLIC_SUPABASE_URL must be a valid URL."),
+  SUPABASE_SECRET_KEY: z
+    .string()
+    .startsWith("sb_secret_", "SUPABASE_SECRET_KEY must be a Supabase secret key."),
+  ANTHROPIC_API_KEY: z
+    .string()
+    .startsWith("sk-ant-", "ANTHROPIC_API_KEY must be an Anthropic API key."),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
@@ -40,6 +47,9 @@ export function getServerEnv(): ServerEnv {
   const parsed = serverEnvSchema.safeParse({
     WDK_SEED: process.env.WDK_SEED,
     WDK_EVM_RPC_URLS: process.env.WDK_EVM_RPC_URLS,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
   });
 
   if (!parsed.success) {
