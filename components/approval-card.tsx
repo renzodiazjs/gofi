@@ -45,10 +45,14 @@ export function ApprovalCard({
   strategy,
   positionAddress,
   onExecuted,
+  onBack,
+  onCancel,
 }: {
   strategy: StrategyRow;
   positionAddress: string;
   onExecuted: () => void;
+  onBack: () => void;
+  onCancel: () => void;
 }) {
   const [state, setState] = useState<State>({ phase: "idle" });
   const [error, setError] = useState<string | null>(null);
@@ -272,6 +276,15 @@ export function ApprovalCard({
           )}
         </div>
       )}
+
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <Button type="button" variant="ghost" onClick={onBack}>
+          Back to proposed strategy
+        </Button>
+        <Button type="button" variant="ghost" onClick={onCancel}>
+          {state.phase === "executed" ? "Set another goal" : "Cancel & edit goal"}
+        </Button>
+      </div>
     </Card>
   );
 }
