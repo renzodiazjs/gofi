@@ -1,12 +1,14 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { GoalAnalysis } from "@/lib/ai/goal-analyzer";
+import type { GoalHistoryEntry } from "@/lib/supabase/goals";
 import type { GoalRow, StrategyRow } from "@/lib/supabase/types";
 import type { WalletSnapshot } from "@/lib/wdk/account";
 import { ApprovalCard } from "./approval-card";
 import { GoalForm, type GoalDraft } from "./goal-form";
+import { GoalHistory } from "./goal-history";
 import { AnalysisCard, StrategyCard } from "./strategy-view";
 import { WalletCard } from "./wallet-card";
 
@@ -27,6 +29,10 @@ export function GofiApp() {
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<Step>("wallet");
 
+  const [history, setHistory] = useState<GoalHistoryEntry[] | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+
   const loadWallet = useCallback(async () => {
     setWalletLoading(true);
     setWalletError(null);
@@ -41,6 +47,51 @@ export function GofiApp() {
     } finally {
       setWalletLoading(false);
     }
+  }, []);
+
+  const loadHistory = useCallback(async () => {
+    setHistoryLoading(true);
+    setHistoryError(null);
+
+    try {
+      const response = await fetch("/api/goals");
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Request failed");
+      setHistory(payload.goals as GoalHistoryEntry[]);
+    } catch (caught) {
+      setHistoryError(
+        caught instanceof Error ? caught.message : "Unknown error"
+      );
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, []);
+
+  // The track record is worth showing before the visitor does anything, so it
+  // loads on arrival. The first state write happens after the request resolves,
+  // never synchronously inside the effect.
+  useEffect(() => {
+    let alive = true;
+
+    (async () => {
+      try {
+        const response = await fetch("/api/goals");
+        const payload = await response.json();
+        if (!alive) return;
+
+        if (!response.ok) throw new Error(payload.error ?? "Request failed");
+        setHistory(payload.goals as GoalHistoryEntry[]);
+      } catch (caught) {
+        if (!alive) return;
+        setHistoryError(
+          caught instanceof Error ? caught.message : "Unknown error"
+        );
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
   }, []);
 
   async function analyze(draft: GoalDraft) {
@@ -60,12 +111,18 @@ export function GofiApp() {
 
       setProposal(payload as Proposal);
       setStep("feasibility");
+      void loadHistory();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unknown error");
     } finally {
       setBusy(false);
     }
   }
+
+  const afterExecution = useCallback(() => {
+    void loadWallet();
+    void loadHistory();
+  }, [loadWallet, loadHistory]);
 
   return (
     <div className="space-y-5">
@@ -107,12 +164,13 @@ export function GofiApp() {
         />
       )}
 
-      {step === "approval" && proposal && (
-        wallet ? (
+      {step === "approval" &&
+        proposal &&
+        (wallet ? (
           <ApprovalCard
             strategy={proposal.strategy}
             positionAddress={wallet.positionAddress}
-            onExecuted={loadWallet}
+            onExecuted={afterExecution}
             onBack={() => setStep("strategy")}
             onCancel={() => setStep("goal")}
           />
@@ -120,8 +178,20 @@ export function GofiApp() {
           <p className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/40">
             Initialize the wallet to approve and execute this strategy.
           </p>
-        )
-      )}
+        ))}
+
+      {/*
+        Deliberately outside the step machine. The steps are things you do, in
+        order; the track record is what earlier runs left behind. Making it a
+        sixth step would put a destination inside a sequence that has none, and
+        would bury the strongest evidence on the page behind four clicks.
+      */}
+      <GoalHistory
+        entries={history}
+        loading={historyLoading}
+        error={historyError}
+        onReload={loadHistory}
+      />
     </div>
   );
 }
