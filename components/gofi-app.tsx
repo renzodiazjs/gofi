@@ -6,9 +6,10 @@ import type { GoalAnalysis } from "@/lib/ai/goal-analyzer";
 import type { GoalHistoryEntry } from "@/lib/supabase/goals";
 import type { GoalRow, StrategyRow } from "@/lib/supabase/types";
 import type { WalletSnapshot } from "@/lib/wdk/account";
+import { AccountChip } from "./account-chip";
 import { ApprovalCard } from "./approval-card";
 import { GoalForm, type GoalDraft } from "./goal-form";
-import { GoalHistory } from "./goal-history";
+import { Protocols } from "./protocols";
 import { AnalysisCard, StrategyCard } from "./strategy-view";
 import { WalletCard } from "./wallet-card";
 
@@ -33,22 +34,6 @@ export function GofiApp() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState<string | null>(null);
 
-  const loadWallet = useCallback(async () => {
-    setWalletLoading(true);
-    setWalletError(null);
-
-    try {
-      const response = await fetch("/api/wallet");
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error ?? "Request failed");
-      setWallet(payload as WalletSnapshot);
-    } catch (caught) {
-      setWalletError(caught instanceof Error ? caught.message : "Unknown error");
-    } finally {
-      setWalletLoading(false);
-    }
-  }, []);
-
   const loadHistory = useCallback(async () => {
     setHistoryLoading(true);
     setHistoryError(null);
@@ -67,9 +52,41 @@ export function GofiApp() {
     }
   }, []);
 
-  // The track record is worth showing before the visitor does anything, so it
-  // loads on arrival. The first state write happens after the request resolves,
-  // never synchronously inside the effect.
+  /**
+   * Connecting is the sign-in. A successful connect moves straight to the goal
+   * step: once the balances are in there is nothing left to do on the wallet
+   * screen, and a second click for that is friction with no payoff.
+   */
+  const connect = useCallback(async () => {
+    setWalletLoading(true);
+    setWalletError(null);
+
+    try {
+      const response = await fetch("/api/wallet");
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Request failed");
+
+      setWallet(payload as WalletSnapshot);
+      setStep("goal");
+      void loadHistory();
+    } catch (caught) {
+      setWalletError(caught instanceof Error ? caught.message : "Unknown error");
+    } finally {
+      setWalletLoading(false);
+    }
+  }, [loadHistory]);
+
+  /** Refresh balances without moving the user out of wherever they are. */
+  const refreshWallet = useCallback(async () => {
+    try {
+      const response = await fetch("/api/wallet");
+      const payload = await response.json();
+      if (response.ok) setWallet(payload as WalletSnapshot);
+    } catch {
+      // A failed background refresh keeps the last known balances on screen.
+    }
+  }, []);
+
   useEffect(() => {
     let alive = true;
 
@@ -120,78 +137,101 @@ export function GofiApp() {
   }
 
   const afterExecution = useCallback(() => {
-    void loadWallet();
+    void refreshWallet();
     void loadHistory();
-  }, [loadWallet, loadHistory]);
+  }, [refreshWallet, loadHistory]);
 
   return (
-    <div className="space-y-5">
-      {step === "wallet" && (
-        <WalletCard
-          snapshot={wallet}
-          loading={walletLoading}
-          error={walletError}
-          onLoad={loadWallet}
-          canContinue={wallet !== null}
-          onContinue={() => setStep("goal")}
-        />
-      )}
+    <>
+      <header className="mb-14 flex flex-wrap items-start justify-between gap-6">
+        <div>
+          <div className="flex items-baseline gap-3">
+            <h1 className="gradient-text text-3xl font-semibold tracking-tight">
+              GoFI
+            </h1>
+            <span className="text-xs uppercase tracking-[0.2em] text-white/30">
+              Goal Finance
+            </span>
+          </div>
+          <p className="mt-4 text-lg text-white/60">
+            Turn financial goals into on-chain strategies.
+          </p>
+        </div>
 
-      {step === "goal" && (
-        <div id="goal" className="scroll-mt-8">
-          <GoalForm
-            onSubmit={analyze}
-            onBack={() => setStep("wallet")}
-            busy={busy}
-            error={error}
+        {/*
+          The address is the account, so the track record hangs off it: it is
+          that wallet's history, not a step in the flow.
+        */}
+        {wallet && (
+          <AccountChip
+            snapshot={wallet}
+            history={history}
+            historyLoading={historyLoading}
+            historyError={historyError}
+            onReloadHistory={loadHistory}
+          />
+        )}
+      </header>
+
+      {step === "wallet" ? (
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_340px]">
+          <Protocols />
+
+          <WalletCard
+            snapshot={wallet}
+            loading={walletLoading}
+            error={walletError}
+            onLoad={connect}
+            canContinue={wallet !== null}
+            onContinue={() => setStep("goal")}
           />
         </div>
+      ) : (
+        <div className="space-y-5">
+          {step === "goal" && (
+            <div id="goal" className="scroll-mt-8">
+              <GoalForm
+                onSubmit={analyze}
+                onBack={() => setStep("wallet")}
+                busy={busy}
+                error={error}
+              />
+            </div>
+          )}
+
+          {step === "feasibility" && proposal && (
+            <AnalysisCard
+              analysis={proposal.analysis}
+              onBack={() => setStep("goal")}
+              onContinue={() => setStep("strategy")}
+            />
+          )}
+
+          {step === "strategy" && proposal && (
+            <StrategyCard
+              strategy={proposal.strategy}
+              onBack={() => setStep("feasibility")}
+              onContinue={() => setStep("approval")}
+            />
+          )}
+
+          {step === "approval" &&
+            proposal &&
+            (wallet ? (
+              <ApprovalCard
+                strategy={proposal.strategy}
+                positionAddress={wallet.positionAddress}
+                onExecuted={afterExecution}
+                onBack={() => setStep("strategy")}
+                onCancel={() => setStep("goal")}
+              />
+            ) : (
+              <p className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/40">
+                Connect the wallet to approve and execute this strategy.
+              </p>
+            ))}
+        </div>
       )}
-
-      {step === "feasibility" && proposal && (
-        <AnalysisCard
-          analysis={proposal.analysis}
-          onBack={() => setStep("goal")}
-          onContinue={() => setStep("strategy")}
-        />
-      )}
-
-      {step === "strategy" && proposal && (
-        <StrategyCard
-          strategy={proposal.strategy}
-          onBack={() => setStep("feasibility")}
-          onContinue={() => setStep("approval")}
-        />
-      )}
-
-      {step === "approval" &&
-        proposal &&
-        (wallet ? (
-          <ApprovalCard
-            strategy={proposal.strategy}
-            positionAddress={wallet.positionAddress}
-            onExecuted={afterExecution}
-            onBack={() => setStep("strategy")}
-            onCancel={() => setStep("goal")}
-          />
-        ) : (
-          <p className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/40">
-            Initialize the wallet to approve and execute this strategy.
-          </p>
-        ))}
-
-      {/*
-        Deliberately outside the step machine. The steps are things you do, in
-        order; the track record is what earlier runs left behind. Making it a
-        sixth step would put a destination inside a sequence that has none, and
-        would bury the strongest evidence on the page behind four clicks.
-      */}
-      <GoalHistory
-        entries={history}
-        loading={historyLoading}
-        error={historyError}
-        onReload={loadHistory}
-      />
-    </div>
+    </>
   );
 }

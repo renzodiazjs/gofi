@@ -112,34 +112,45 @@ export function GoalHistory({
   loading,
   error,
   onReload,
+  bare = false,
 }: {
   entries: GoalHistoryEntry[] | null;
   loading: boolean;
   error: string | null;
   onReload: () => void;
+  /** Drop the card chrome when the panel around it already provides one. */
+  bare?: boolean;
 }) {
   const executed = (entries ?? []).reduce(
     (total, entry) => total + entry.transactions.length,
     0
   );
 
-  return (
-    <Card title="Track record" step="05">
+  const body = (
+    <>
       {error && <ErrorNote>{error}</ErrorNote>}
+
+      {!error && entries === null && (
+        <p className="text-sm text-white/40">Loading your goals…</p>
+      )}
 
       {!error && entries && entries.length === 0 && (
         <p className="text-sm text-white/40">
-          No goals yet. Set one above and it will show up here with whatever it
+          No goals yet. Set one and it will show up here with whatever it
           settled on-chain.
         </p>
       )}
 
       {!error && entries && entries.length > 0 && (
         <>
-          <p className="mb-4 text-xs text-white/35">
-            {entries.length} {entries.length === 1 ? "goal" : "goals"} ·{" "}
-            {executed} on-chain {executed === 1 ? "transaction" : "transactions"}
-          </p>
+          {/* The panel header already carries the counts, so skip them there. */}
+          {!bare && (
+            <p className="mb-4 text-xs text-white/35">
+              {entries.length} {entries.length === 1 ? "goal" : "goals"} ·{" "}
+              {executed} on-chain{" "}
+              {executed === 1 ? "transaction" : "transactions"}
+            </p>
+          )}
 
           <ul>
             {entries.map((entry) => (
@@ -154,6 +165,14 @@ export function GoalHistory({
           {loading ? "Loading…" : "Refresh"}
         </Button>
       </div>
+    </>
+  );
+
+  if (bare) return body;
+
+  return (
+    <Card title="Track record" step="05">
+      {body}
     </Card>
   );
 }
