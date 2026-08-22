@@ -16,3 +16,22 @@ export function formatUnits(
 
   return trimmed ? `${sign}${whole}.${trimmed}` : `${sign}${whole}`;
 }
+
+/** Parses a decimal string into base units. Throws on excess precision. */
+export function parseUnits(value: string, decimals: number): bigint {
+  const trimmed = value.trim();
+
+  if (!/^\d+(\.\d+)?$/.test(trimmed)) {
+    throw new Error(`"${value}" is not a valid positive decimal amount.`);
+  }
+
+  const [whole, fraction = ""] = trimmed.split(".");
+
+  if (fraction.length > decimals) {
+    throw new Error(
+      `Amount has ${fraction.length} decimals but the token allows ${decimals}.`
+    );
+  }
+
+  return BigInt(whole + fraction.padEnd(decimals, "0"));
+}
