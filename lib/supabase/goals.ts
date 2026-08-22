@@ -8,6 +8,7 @@ import { getSupabase } from "./server";
 import {
   toGuardrailsInsert,
   type GoalRow,
+  type GuardrailsRow,
   type StrategyRow,
   type TransactionRow,
 } from "./types";
@@ -129,4 +130,64 @@ export async function recordTransaction(
   if (error) fail("recordTransaction", error);
 
   return data as TransactionRow;
+}
+
+export async function getStrategyWithGoal(
+  strategyId: number
+): Promise<{ strategy: StrategyRow; goal: GoalRow; guardrails: GuardrailsRow }> {
+  const supabase = getSupabase();
+
+  const strategy = await supabase
+    .from("strategies")
+    .select()
+    .eq("id", strategyId)
+    .single();
+
+  if (strategy.error) fail("getStrategy", strategy.error);
+
+  const goal = await supabase
+    .from("goals")
+    .select()
+    .eq("id", strategy.data.goal_id)
+    .single();
+
+  if (goal.error) fail("getStrategy.goal", goal.error);
+
+  const guardrails = await supabase
+    .from("guardrails")
+    .select()
+    .eq("goal_id", strategy.data.goal_id)
+    .single();
+
+  if (guardrails.error) fail("getStrategy.guardrails", guardrails.error);
+
+  return {
+    strategy: strategy.data as StrategyRow,
+    goal: goal.data as GoalRow,
+    guardrails: guardrails.data as GuardrailsRow,
+  };
+}
+
+export async function setStrategyStatus(
+  strategyId: number,
+  status: StrategyRow["status"]
+): Promise<void> {
+  const { error } = await getSupabase()
+    .from("strategies")
+    .update({ status })
+    .eq("id", strategyId);
+
+  if (error) fail("setStrategyStatus", error);
+}
+
+export async function setGoalStatus(
+  goalId: number,
+  status: GoalRow["status"]
+): Promise<void> {
+  const { error } = await getSupabase()
+    .from("goals")
+    .update({ status })
+    .eq("id", goalId);
+
+  if (error) fail("setGoalStatus", error);
 }
