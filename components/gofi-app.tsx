@@ -18,14 +18,16 @@ type Proposal = {
   strategy: StrategyRow;
 };
 
+type Step = "wallet" | "goal" | "feasibility" | "strategy" | "approval";
+
 export function GofiApp() {
   const [wallet, setWallet] = useState<WalletSnapshot | null>(null);
   const [walletLoading, setWalletLoading] = useState(false);
   const [walletError, setWalletError] = useState<string | null>(null);
-
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [step, setStep] = useState<Step>("wallet");
 
   const [history, setHistory] = useState<GoalHistoryEntry[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -108,6 +110,7 @@ export function GofiApp() {
       if (!response.ok) throw new Error(payload.error ?? "Request failed");
 
       setProposal(payload as Proposal);
+      setStep("feasibility");
       void loadHistory();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unknown error");
@@ -123,36 +126,66 @@ export function GofiApp() {
 
   return (
     <div className="space-y-5">
-      <WalletCard
-        snapshot={wallet}
-        loading={walletLoading}
-        error={walletError}
-        onLoad={loadWallet}
-      />
-
-      <div id="goal" className="scroll-mt-8">
-        <GoalForm onSubmit={analyze} busy={busy} error={error} />
-      </div>
-
-      {proposal && (
-        <>
-          <AnalysisCard analysis={proposal.analysis} />
-          <StrategyCard strategy={proposal.strategy} />
-
-          {wallet ? (
-            <ApprovalCard
-              strategy={proposal.strategy}
-              positionAddress={wallet.positionAddress}
-              onExecuted={afterExecution}
-            />
-          ) : (
-            <p className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/40">
-              Initialize the wallet to approve and execute this strategy.
-            </p>
-          )}
-        </>
+      {step === "wallet" && (
+        <WalletCard
+          snapshot={wallet}
+          loading={walletLoading}
+          error={walletError}
+          onLoad={loadWallet}
+          canContinue={wallet !== null}
+          onContinue={() => setStep("goal")}
+        />
       )}
 
+      {step === "goal" && (
+        <div id="goal" className="scroll-mt-8">
+          <GoalForm
+            onSubmit={analyze}
+            onBack={() => setStep("wallet")}
+            busy={busy}
+            error={error}
+          />
+        </div>
+      )}
+
+      {step === "feasibility" && proposal && (
+        <AnalysisCard
+          analysis={proposal.analysis}
+          onBack={() => setStep("goal")}
+          onContinue={() => setStep("strategy")}
+        />
+      )}
+
+      {step === "strategy" && proposal && (
+        <StrategyCard
+          strategy={proposal.strategy}
+          onBack={() => setStep("feasibility")}
+          onContinue={() => setStep("approval")}
+        />
+      )}
+
+      {step === "approval" &&
+        proposal &&
+        (wallet ? (
+          <ApprovalCard
+            strategy={proposal.strategy}
+            positionAddress={wallet.positionAddress}
+            onExecuted={afterExecution}
+            onBack={() => setStep("strategy")}
+            onCancel={() => setStep("goal")}
+          />
+        ) : (
+          <p className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/40">
+            Initialize the wallet to approve and execute this strategy.
+          </p>
+        ))}
+
+      {/*
+        Deliberately outside the step machine. The steps are things you do, in
+        order; the track record is what earlier runs left behind. Making it a
+        sixth step would put a destination inside a sequence that has none, and
+        would bury the strongest evidence on the page behind four clicks.
+      */}
       <GoalHistory
         entries={history}
         loading={historyLoading}

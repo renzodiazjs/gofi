@@ -12,11 +12,15 @@ export function WalletCard({
   loading,
   error,
   onLoad,
+  canContinue,
+  onContinue,
 }: {
   snapshot: WalletSnapshot | null;
   loading: boolean;
   error: string | null;
   onLoad: () => void;
+  canContinue: boolean;
+  onContinue: () => void;
 }) {
   return (
     <Card title="Wallet" step="00">
@@ -66,9 +70,14 @@ export function WalletCard({
 
           {error && <ErrorNote>{error}</ErrorNote>}
 
-          <Button variant="ghost" onClick={onLoad} disabled={loading}>
-            {loading ? "Refreshing…" : "Refresh"}
-          </Button>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="ghost" onClick={onLoad} disabled={loading}>
+              {loading ? "Refreshing…" : "Refresh"}
+            </Button>
+            <Button variant="ghost" onClick={onContinue} disabled={!canContinue}>
+              Set a goal
+            </Button>
+          </div>
         </div>
       )}
     </Card>

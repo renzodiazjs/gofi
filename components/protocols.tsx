@@ -155,14 +155,7 @@ export function Protocols() {
           Live on Sepolia today. The rest are the protocols strategies are
           written against, and are not wired up yet.
         </p>
-
-        <a
-          href="#goal"
-          className="mt-6 inline-flex rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white/80 transition hover:border-spark/50 hover:text-white"
-        >
-          Set a goal
-        </a>
       </div>
-    </section>
+      </section>
   );
 }

@@ -2,7 +2,7 @@
 
 import type { GoalAnalysis } from "@/lib/ai/goal-analyzer";
 import type { Feasibility, StrategyRow } from "@/lib/supabase/types";
-import { Badge, Card, Field, type BadgeTone } from "./ui";
+import { Badge, Button, Card, Field, type BadgeTone } from "./ui";
 
 const FEASIBILITY_TONE: Record<Feasibility, BadgeTone> = {
   feasible: "emerald",
@@ -16,7 +16,15 @@ const CONFIDENCE_TONE: Record<StrategyRow["confidence"], BadgeTone> = {
   low: "rose",
 };
 
-export function AnalysisCard({ analysis }: { analysis: GoalAnalysis }) {
+export function AnalysisCard({
+  analysis,
+  onBack,
+  onContinue,
+}: {
+  analysis: GoalAnalysis;
+  onBack: () => void;
+  onContinue: () => void;
+}) {
   return (
     <Card title="Feasibility" step="02">
       <div className="mb-5">
@@ -55,11 +63,28 @@ export function AnalysisCard({ analysis }: { analysis: GoalAnalysis }) {
           </ul>
         </div>
       )}
+
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <Button type="button" variant="ghost" onClick={onBack}>
+          Edit financial goal
+        </Button>
+        <Button type="button" variant="ghost" onClick={onContinue}>
+          Review proposed strategy
+        </Button>
+      </div>
     </Card>
   );
 }
 
-export function StrategyCard({ strategy }: { strategy: StrategyRow }) {
+export function StrategyCard({
+  strategy,
+  onBack,
+  onContinue,
+}: {
+  strategy: StrategyRow;
+  onBack: () => void;
+  onContinue: () => void;
+}) {
   return (
     <Card title="Proposed strategy" step="03">
       <div className="mb-5 flex flex-wrap items-center gap-2">
@@ -108,6 +133,15 @@ export function StrategyCard({ strategy }: { strategy: StrategyRow }) {
         <p className="mt-2 text-sm leading-relaxed text-white/70">
           {strategy.reasoning}
         </p>
+      </div>
+
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <Button type="button" variant="ghost" onClick={onBack}>
+          Back to feasibility
+        </Button>
+        <Button type="button" variant="ghost" onClick={onContinue}>
+          Approve &amp; execute
+        </Button>
       </div>
     </Card>
   );

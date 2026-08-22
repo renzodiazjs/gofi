@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { RiskProfile } from "@/types";
 import { Button, Card, ErrorNote } from "./ui";
@@ -23,12 +23,32 @@ function NumberInput({
   suffix,
   value,
   onChange,
+  integer = true,
+  hint,
 }: {
   label: string;
   suffix: string;
   value: number;
   onChange: (value: number) => void;
+  integer?: boolean;
+  hint?: string;
 }) {
+  // The input is kept as a raw string while the user edits, so the field can
+  // legitimately be empty (no auto-collapsed "0") and so we control exactly
+  // which characters survive the keystroke filter.
+  const [draft, setDraft] = useState<string>(String(value));
+  const focused = useRef(false);
+
+  // Sync the draft from the canonical parent value when the user is not
+  // actively editing (e.g. after navigating back to this step).
+  useEffect(() => {
+    if (!focused.current) {
+      setDraft(String(value));
+    }
+  }, [value]);
+
+  const pattern = integer ? /^\d*$/ : /^\d*\.?\d*$/;
+
   return (
     <label className="block">
       <span className="text-[11px] uppercase tracking-widest text-white/35">
@@ -36,10 +56,32 @@ function NumberInput({
       </span>
       <div className="mt-1.5 flex items-center rounded-lg border border-white/10 bg-black/40 focus-within:border-white/30">
         <input
-          type="number"
+          type="text"
+          inputMode={integer ? "numeric" : "decimal"}
           min={0}
-          value={value}
-          onChange={(event) => onChange(Number(event.target.value))}
+          value={draft}
+          onFocus={() => {
+            focused.current = true;
+          }}
+          onChange={(event) => {
+            const next = event.target.value;
+            if (!pattern.test(next)) return;
+            setDraft(next);
+            if (next === "") return;
+            const parsed = Number(next);
+            if (Number.isFinite(parsed)) {
+              onChange(parsed);
+            }
+          }}
+          onBlur={() => {
+            focused.current = false;
+            if (draft === "") {
+              setDraft("0");
+              onChange(0);
+            } else {
+              setDraft(String(value));
+            }
+          }}
           // A focused number input treats the scroll wheel as increment/
           // decrement, so scrolling the page over it silently rewrites the
           // amount. Blurring on wheel is the only reliable way to stop it.
@@ -48,16 +90,19 @@ function NumberInput({
         />
         <span className="px-3 text-xs text-white/30">{suffix}</span>
       </div>
+      {hint && <p className="mt-1 text-xs text-rose-300/60">{hint}</p>}
     </label>
   );
 }
 
 export function GoalForm({
   onSubmit,
+  onBack,
   busy,
   error,
 }: {
   onSubmit: (goal: GoalDraft) => void;
+  onBack: () => void;
   busy: boolean;
   error: string | null;
 }) {
@@ -70,6 +115,10 @@ export function GoalForm({
 
   const set = <K extends keyof GoalDraft>(key: K, value: GoalDraft[K]) =>
     setDraft((current) => ({ ...current, [key]: value }));
+
+  const initialInvalid = draft.initialCapital <= 0;
+  const targetInvalid = draft.targetAmount <= draft.initialCapital;
+  const formInvalid = initialInvalid || targetInvalid;
 
   return (
     <Card title="Financial goal" step="01">
@@ -86,12 +135,24 @@ export function GoalForm({
             suffix="USDT"
             value={draft.initialCapital}
             onChange={(value) => set("initialCapital", value)}
+            integer={false}
+            hint={
+              initialInvalid
+                ? "Initial capital must be greater than 0."
+                : undefined
+            }
           />
           <NumberInput
             label="I want"
             suffix="USDT"
             value={draft.targetAmount}
             onChange={(value) => set("targetAmount", value)}
+            integer={false}
+            hint={
+              targetInvalid
+                ? "Target must be greater than the initial capital."
+                : undefined
+            }
           />
         </div>
 
@@ -126,9 +187,14 @@ export function GoalForm({
 
         {error && <ErrorNote>{error}</ErrorNote>}
 
-        <Button type="submit" variant="shimmer" disabled={busy}>
-          {busy ? "Analyzing…" : "Analyze goal"}
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button type="submit" variant="shimmer" disabled={busy || formInvalid}>
+            {busy ? "Analyzing…" : "Analyze goal"}
+          </Button>
+          <Button type="button" variant="ghost" onClick={onBack}>
+            Back to wallet
+          </Button>
+        </div>
       </form>
     </Card>
   );
