@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "wallet:new": "node scripts/new-wallet.mjs"
+    "wallet:new": "node scripts/new-wallet.mjs",
+    "wdk:setup": "node scripts/setup-wdk-cli.mjs"
   },
   "dependencies": {
     "@tetherto/wdk": "1.0.0-beta.16",
