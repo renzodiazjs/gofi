@@ -57,7 +57,7 @@ export function Particles({
         x: Math.random() * width,
         y: Math.random() * height,
         radius: Math.random() * 1.1 + 0.4,
-        alpha: Math.random() * 0.4 + 0.1,
+        alpha: Math.random() * 0.3 + 0.08,
         driftX: (Math.random() - 0.5) * 0.12,
         driftY: -(Math.random() * 0.18 + 0.04),
         pulse: Math.random() * Math.PI * 2,
@@ -79,6 +79,9 @@ export function Particles({
           if (particle.x > width + 10) particle.x = -10;
         }
 
+        // The field sits above the interface, so the ceiling on alpha is a
+        // legibility budget, not a style choice: any brighter and dots start
+        // landing inside the numbers.
         const twinkle = reduceMotion
           ? particle.alpha
           : particle.alpha * (0.65 + 0.35 * Math.sin(particle.pulse));
@@ -110,7 +113,7 @@ export function Particles({
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full"
+      className="pointer-events-none fixed inset-0 z-20 h-full w-full"
     />
   );
 }
