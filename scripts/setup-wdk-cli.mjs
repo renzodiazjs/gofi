@@ -85,20 +85,26 @@ if (alreadyImported) {
   console.log(`Imported wallet "${WALLET_NAME}".`);
 }
 
+// An unlocked wallet is a signing oracle for anything that can reach the
+// daemon, so it expires. `--ttl 0` would leave it unlocked until the machine
+// reboots, which is the wrong default for a key that lives on a laptop.
+// Override with WDK_UNLOCK_TTL_MINUTES when a long session is genuinely wanted.
+const ttlMinutes = process.env.WDK_UNLOCK_TTL_MINUTES ?? "120";
+
 const unlocked = wdk([
   "wallet",
   "unlock",
   "--name",
   WALLET_NAME,
   "--ttl",
-  "0",
+  ttlMinutes,
   "--json",
 ]);
 if (unlocked.status !== 0) {
   console.error(unlocked.stdout || unlocked.stderr);
   process.exit(1);
 }
-console.log("Wallet unlocked (no TTL).");
+console.log(`Wallet unlocked for ${ttlMinutes} minutes.`);
 
 const mcp = wdk(["mcp", "setup", "--ai-tool", "claude-code"], {
   stdio: "inherit",

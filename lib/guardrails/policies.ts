@@ -1,11 +1,13 @@
 import type { Policy, PolicyContext } from "@tetherto/wdk";
 
-import { SEPOLIA } from "@/lib/wdk/networks";
+import { SEPOLIA, SEPOLIA_USDT } from "@/lib/wdk/networks";
 import {
   ALLOWED_TOKENS,
+  DEFAULT_GUARDRAILS,
   MAX_NATIVE_WEI,
   MAX_USDT_BASE_UNITS,
 } from "./config";
+import { usdtVolumeToday } from "./daily-volume";
 
 type TransferArgs = { token?: unknown; amount?: unknown };
 type TransactionArgs = { value?: unknown };
@@ -36,6 +38,23 @@ function isWithinTokenCap(context: PolicyContext): boolean {
 function isWithinNativeCap(context: PolicyContext): boolean {
   const value = toBigInt(firstArg<TransactionArgs>(context)?.value);
   return value !== null && value <= MAX_NATIVE_WEI;
+}
+
+/**
+ * Would this transfer push today's USD₮ total past the daily cap?
+ *
+ * The per-transaction cap alone never stopped anyone from sending it ten times
+ * in a row, so the daily limit the interface promises has to be evaluated here,
+ * against the ledger, at the moment of signing.
+ */
+async function exceedsDailyVolume(context: PolicyContext): Promise<boolean> {
+  const amount = toBigInt(firstArg<TransferArgs>(context)?.amount);
+  if (amount === null) return true;
+
+  const requested = Number(amount) / 10 ** SEPOLIA_USDT.decimals;
+  const spent = await usdtVolumeToday();
+
+  return spent + requested > DEFAULT_GUARDRAILS.maxDailyVolumeUsd;
 }
 
 /**
@@ -91,6 +110,13 @@ export function buildGuardrailPolicies(): Policy[] {
           operation: "sendTransaction",
           action: "DENY",
           conditions: [(context) => !isWithinNativeCap(context)],
+        },
+        {
+          name: "deny-over-daily-volume",
+          reason: `Transfer would exceed the daily cap of ${DEFAULT_GUARDRAILS.maxDailyVolumeUsd} USDT.`,
+          operation: "transfer",
+          action: "DENY",
+          conditions: [exceedsDailyVolume],
         },
       ],
     },

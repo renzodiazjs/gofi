@@ -2,6 +2,7 @@ import { PolicyViolationError } from "@tetherto/wdk";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { DEFAULT_GUARDRAILS } from "@/lib/guardrails/config";
 import {
   getStrategyWithGoal,
   recordTransaction,
@@ -66,7 +67,7 @@ export async function POST(
   const { positionAddress, confirm } = parsed.data;
 
   try {
-    const { strategy, goal, guardrails } = await getStrategyWithGoal(strategyId);
+    const { strategy, goal } = await getStrategyWithGoal(strategyId);
 
     if (strategy.status === "executed") {
       return NextResponse.json(
@@ -89,19 +90,23 @@ export async function POST(
     // Size the first step by the allocation, then clamp it to the per
     // transaction cap. The wallet-layer policy would reject an over-cap
     // transfer anyway; clamping turns that into a plan rather than an error.
+    //
+    // The cap is read from the same constant the WDK policy compiles from, not
+    // from the goal's guardrails row. Two sources would let the plan promise a
+    // limit the wallet does not actually enforce; the stored row is the record
+    // of what was in force when the goal was created, not a control input.
+    const cap = DEFAULT_GUARDRAILS.maxTransactionUsd;
     const allocated = (goal.initial_capital * usdtLeg.percentage) / 100;
-    const amount = Math.min(allocated, guardrails.max_transaction_usd);
-    const tranches = Math.ceil(allocated / guardrails.max_transaction_usd);
+    const amount = Math.min(allocated, cap);
+    const tranches = Math.ceil(allocated / cap);
 
     const plan = {
       allocationPct: usdtLeg.percentage,
       allocatedUsdt: Number(allocated.toFixed(6)),
       thisTransferUsdt: Number(amount.toFixed(6)),
       tranchesRequired: tranches,
-      cappedBy:
-        allocated > guardrails.max_transaction_usd
-          ? "max_transaction_usd"
-          : null,
+      dailyCapUsdt: DEFAULT_GUARDRAILS.maxDailyVolumeUsd,
+      cappedBy: allocated > cap ? "max_transaction_usd" : null,
     };
 
     const amountString = amount.toFixed(6);
