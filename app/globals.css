@@ -3,11 +3,16 @@
 :root {
   --background: #08080a;
   --foreground: #ededed;
+
+  /* Single accent for the animated surfaces. Change here, changes everywhere. */
+  --spark: #38bdf8;
+  --spark-soft: #7dd3fc;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-spark: var(--spark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,4 +21,90 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+ * Shimmer button
+ *
+ * A conic gradient spins behind the button; an inset copy of the surface sits
+ * on top of it, so only the 1px rim is left uncovered and the spark reads as a
+ * highlight travelling around the border. No JavaScript, no dependency.
+ * ------------------------------------------------------------------------- */
+.shimmer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #101014;
+  box-shadow:
+    0 0 18px -6px var(--spark),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.06);
+}
+
+.shimmer::before {
+  content: "";
+  position: absolute;
+  inset: -150%;
+  z-index: -2;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 300deg,
+    var(--spark) 350deg,
+    transparent 360deg
+  );
+  animation: spark-orbit 3s linear infinite;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: #101014;
+}
+
+.shimmer:hover {
+  box-shadow:
+    0 0 28px -4px var(--spark),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.1);
+}
+
+.shimmer:disabled::before {
+  animation-play-state: paused;
+}
+
+@keyframes spark-orbit {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Gradient wordmark — colour bleeding into grey.
+ * ------------------------------------------------------------------------- */
+.gradient-text {
+  background-image: linear-gradient(
+    100deg,
+    var(--spark-soft) 0%,
+    #e2e8f0 38%,
+    #6b7280 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient-drift 8s ease-in-out infinite alternate;
+}
+
+@keyframes gradient-drift {
+  to {
+    background-position: 100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::before,
+  .gradient-text {
+    animation: none;
+  }
 }

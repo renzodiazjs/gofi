@@ -126,7 +126,7 @@ export function GoalForm({
 
         {error && <ErrorNote>{error}</ErrorNote>}
 
-        <Button type="submit" disabled={busy}>
+        <Button type="submit" variant="shimmer" disabled={busy}>
           {busy ? "Analyzing…" : "Analyze goal"}
         </Button>
       </form>

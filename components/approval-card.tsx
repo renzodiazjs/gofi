@@ -195,6 +195,7 @@ export function ApprovalCard({
 
           <div className="flex gap-3">
             <Button
+              variant="shimmer"
               onClick={() => {
                 setState({ ...state, phase: "executing" });
                 void call(true);

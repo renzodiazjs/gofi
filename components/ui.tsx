@@ -71,17 +71,21 @@ export function Button({
   variant = "primary",
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "ghost";
+  variant?: "primary" | "ghost" | "shimmer";
 }) {
-  const styles =
-    variant === "primary"
-      ? "bg-white text-black hover:bg-white/85"
-      : "border border-white/15 text-white/70 hover:bg-white/5";
+  // `shimmer` carries the animated rim from globals.css. Reserve it for the
+  // action that actually commits — if every button shimmers, none of them read
+  // as the important one.
+  const styles = {
+    primary: "bg-white text-black hover:bg-white/85",
+    ghost: "border border-white/15 text-white/70 hover:bg-white/5",
+    shimmer: "shimmer text-spark",
+  }[variant];
 
   return (
     <button
       {...props}
-      className={`rounded-lg px-4 py-2.5 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-30 ${styles}`}
+      className={`rounded-full px-5 py-2.5 text-sm font-medium tracking-wide transition disabled:cursor-not-allowed disabled:opacity-30 ${styles}`}
     >
       {children}
     </button>
