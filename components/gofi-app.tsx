@@ -10,6 +10,7 @@ import { AccountMenu } from "./account-menu";
 import { ApprovalCard } from "./approval-card";
 import { GoalForm, type GoalDraft } from "./goal-form";
 import { GoalRecap } from "./goal-recap";
+import { GoalDashboard } from "./goal-dashboard";
 import { GoalsView } from "./goals-view";
 import { Hero } from "./hero";
 import { Protocols } from "./protocols";
@@ -37,7 +38,7 @@ export function GofiApp() {
   const [step, setStep] = useState<Step>("wallet");
   const [submitted, setSubmitted] = useState<GoalDraft | null>(null);
   const [settledHash, setSettledHash] = useState<string | null>(null);
-  const [view, setView] = useState<"flow" | "goals">("flow");
+  const [view, setView] = useState<"flow" | "goals" | "dashboard">("flow");
   const [keeping, setKeeping] = useState(false);
 
   const [history, setHistory] = useState<GoalHistoryEntry[] | null>(null);
@@ -77,14 +78,21 @@ export function GofiApp() {
       if (!response.ok) throw new Error(payload.error ?? "Request failed");
 
       setWallet(payload as WalletSnapshot);
-      setStep("goal");
-      void loadHistory();
+
+      // A returning user lands on where their goal stands, not on a blank
+      // form. Only somebody with nothing running wants to be asked a question
+      // the moment they sign in.
+      const kept = await fetch("/api/goals").then((r) => r.json());
+      const goals = (kept.goals ?? []) as GoalHistoryEntry[];
+      setHistory(goals);
+      setStep(goals.length > 0 ? "wallet" : "goal");
+      setView(goals.length > 0 ? "dashboard" : "flow");
     } catch (caught) {
       setWalletError(caught instanceof Error ? caught.message : "Unknown error");
     } finally {
       setWalletLoading(false);
     }
-  }, [loadHistory]);
+  }, []);
 
   /** Refresh balances without moving the user out of wherever they are. */
   const refreshWallet = useCallback(async () => {
@@ -246,14 +254,35 @@ export function GofiApp() {
         )}
       </header>
 
-      {view === "goals" ? (
+      {view === "dashboard" && history && history.length > 0 ? (
+        <GoalDashboard
+          // The goal you are running beats the goal you created last: a
+          // dashboard that opens on an untouched proposal answers a question
+          // nobody asked.
+          entry={
+            history.find((goal) => goal.transactions.length > 0) ?? history[0]
+          }
+          totalGoals={history.length}
+          onSeeAll={() => setView("goals")}
+          onNewGoal={() => {
+            setProposal(null);
+            setAnalysis(null);
+            setSubmitted(null);
+            setSettledHash(null);
+            setView("flow");
+            setStep("goal");
+          }}
+        />
+      ) : view === "goals" ? (
         <GoalsView
           entries={history}
           loading={historyLoading}
           error={historyError}
           onReload={loadHistory}
-          onBack={() => setView("flow")}
-          canGoBack={proposal !== null || step !== "wallet"}
+          onBack={() =>
+            setView(history && history.length > 0 ? "dashboard" : "flow")
+          }
+          canGoBack
           onNewGoal={() => {
             // A new goal starts clean, otherwise the recap would carry the
             // previous run's verdict into an unrelated one.

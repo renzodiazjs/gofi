@@ -159,7 +159,7 @@ export function GoalsView({
   onReload,
   onNewGoal,
   onBack,
-  canGoBack,
+  canGoBack = true,
 }: {
   entries: GoalHistoryEntry[] | null;
   loading: boolean;
@@ -169,7 +169,7 @@ export function GoalsView({
   /** Return to whatever the user was doing, without discarding it. */
   onBack: () => void;
   /** False before the first goal, when there is no flow to return to. */
-  canGoBack: boolean;
+  canGoBack?: boolean;
 }) {
   const goals = entries ?? [];
   const executed = goals.reduce(
