@@ -6,10 +6,11 @@ import type { GoalAnalysis } from "@/lib/ai/goal-analyzer";
 import type { GoalHistoryEntry } from "@/lib/supabase/goals";
 import type { GoalRow, StrategyRow } from "@/lib/supabase/types";
 import type { WalletSnapshot } from "@/lib/wdk/account";
-import { AccountChip } from "./account-chip";
+import { AccountMenu } from "./account-menu";
 import { ApprovalCard } from "./approval-card";
 import { GoalForm, type GoalDraft } from "./goal-form";
 import { GoalRecap } from "./goal-recap";
+import { GoalsView } from "./goals-view";
 import { Hero } from "./hero";
 import { Protocols } from "./protocols";
 import { Stepper, type FlowStep } from "./stepper";
@@ -34,6 +35,7 @@ export function GofiApp() {
   const [step, setStep] = useState<Step>("wallet");
   const [submitted, setSubmitted] = useState<GoalDraft | null>(null);
   const [settledHash, setSettledHash] = useState<string | null>(null);
+  const [view, setView] = useState<"flow" | "goals">("flow");
 
   const [history, setHistory] = useState<GoalHistoryEntry[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -170,17 +172,36 @@ export function GofiApp() {
           that wallet's history, not a step in the flow.
         */}
         {wallet && (
-          <AccountChip
+          <AccountMenu
             snapshot={wallet}
-            history={history}
-            historyLoading={historyLoading}
-            historyError={historyError}
-            onReloadHistory={loadHistory}
+            goalCount={(history ?? []).length}
+            onOpenGoals={() => setView("goals")}
+            onDisconnect={() => {
+              setWallet(null);
+              setView("flow");
+              setStep("wallet");
+            }}
           />
         )}
       </header>
 
-      {step === "wallet" ? (
+      {view === "goals" ? (
+        <GoalsView
+          entries={history}
+          loading={historyLoading}
+          error={historyError}
+          onReload={loadHistory}
+          onNewGoal={() => {
+            // A new goal starts clean, otherwise the recap would carry the
+            // previous run's verdict into an unrelated one.
+            setProposal(null);
+            setSubmitted(null);
+            setSettledHash(null);
+            setView("flow");
+            setStep("goal");
+          }}
+        />
+      ) : step === "wallet" ? (
         <>
           <Hero
             onConnect={connect}

@@ -2,15 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import type { GoalHistoryEntry } from "@/lib/supabase/goals";
 import type { WalletSnapshot } from "@/lib/wdk/account";
-import { GoalHistory } from "./goal-history";
 
 /**
  * A deterministic mark for an address.
  *
  * Derived from the address itself, so the same wallet always produces the same
- * avatar — which is what makes it useful as identity rather than decoration.
+ * avatar — which is what makes it identity rather than decoration.
  */
 function addressAvatar(address: string) {
   let hash = 0;
@@ -18,34 +16,43 @@ function addressAvatar(address: string) {
     hash = (hash * 31 + address.charCodeAt(i)) % 360;
   }
 
-  const a = hash;
-  const b = (hash + 140) % 360;
-
-  return `linear-gradient(135deg, hsl(${a} 70% 55%), hsl(${b} 75% 45%))`;
+  return `linear-gradient(135deg, hsl(${hash} 70% 55%), hsl(${(hash + 140) % 360} 75% 45%))`;
 }
 
 function short(address: string) {
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
 }
 
-export function AccountChip({
+function Row({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 py-1.5">
+      <span className="text-xs text-white/35">{label}</span>
+      <span className="font-mono text-xs text-white/80">{value}</span>
+    </div>
+  );
+}
+
+/**
+ * The account menu.
+ *
+ * Session-scoped only: who you are, what you hold, and the way out. The goal
+ * history used to live here and no longer does — "how is my goal doing" is the
+ * product's second screen, not a line in a dropdown.
+ */
+export function AccountMenu({
   snapshot,
-  history,
-  historyLoading,
-  historyError,
-  onReloadHistory,
+  goalCount,
+  onOpenGoals,
+  onDisconnect,
 }: {
   snapshot: WalletSnapshot;
-  history: GoalHistoryEntry[] | null;
-  historyLoading: boolean;
-  historyError: string | null;
-  onReloadHistory: () => void;
+  goalCount: number;
+  onOpenGoals: () => void;
+  onDisconnect: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const holder = useRef<HTMLDivElement>(null);
 
-  // A panel that covers content has to be dismissible the two ways people
-  // expect: click away, or press Escape.
   useEffect(() => {
     if (!open) return;
 
@@ -65,11 +72,6 @@ export function AccountChip({
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
-
-  const executed = (history ?? []).reduce(
-    (total, entry) => total + entry.transactions.length,
-    0
-  );
 
   return (
     <div ref={holder} className="relative">
@@ -108,9 +110,9 @@ export function AccountChip({
       </button>
 
       {open && (
-        <div className="animate-rise absolute right-0 z-30 mt-2 w-[min(92vw,460px)] overflow-hidden rounded-xl border border-white/12 bg-[#0b0b0f] shadow-2xl shadow-black/60">
-          <div className="border-b border-white/[0.07] px-5 py-4">
-            <p className="text-[11px] uppercase tracking-widest text-white/35">
+        <div className="animate-rise absolute right-0 z-30 mt-2 w-[min(92vw,320px)] overflow-hidden rounded-xl border border-white/12 bg-[#0b0b0f] shadow-2xl shadow-black/60">
+          <div className="border-b border-white/[0.07] px-4 py-3">
+            <p className="text-[10px] uppercase tracking-widest text-white/30">
               Signed in as
             </p>
             <a
@@ -121,25 +123,42 @@ export function AccountChip({
             >
               {snapshot.address}
             </a>
-            <p className="mt-2 font-mono text-[11px] text-white/35">
-              {snapshot.native.formatted} ETH ·{" "}
-              {snapshot.tokens[0]?.formatted ?? "0"} USDT ·{" "}
-              {snapshot.network.displayName}
-            </p>
-            <p className="mt-1 font-mono text-[11px] text-white/25">
-              {(history ?? []).length} goals · {executed} on-chain{" "}
-              {executed === 1 ? "transaction" : "transactions"}
-            </p>
           </div>
 
-          <div className="max-h-[58vh] overflow-y-auto px-5 py-4">
-            <GoalHistory
-              entries={history}
-              loading={historyLoading}
-              error={historyError}
-              onReload={onReloadHistory}
-              bare
+          <div className="border-b border-white/[0.07] px-4 py-2">
+            <Row label="Network" value={snapshot.network.displayName} />
+            <Row
+              label="USDT"
+              value={`${snapshot.tokens[0]?.formatted ?? "0"}`}
             />
+            <Row label="Gas" value={`${snapshot.native.formatted} ETH`} />
+          </div>
+
+          <div className="p-1.5">
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                onOpenGoals();
+              }}
+              className="flex w-full items-center justify-between gap-3 rounded-lg px-2.5 py-2 text-left text-sm text-white/80 transition hover:bg-white/[0.05]"
+            >
+              Your goals
+              <span className="font-mono text-[11px] text-white/30">
+                {goalCount}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                onDisconnect();
+              }}
+              className="w-full rounded-lg px-2.5 py-2 text-left text-sm text-white/45 transition hover:bg-white/[0.05] hover:text-white/80"
+            >
+              Disconnect
+            </button>
           </div>
         </div>
       )}
