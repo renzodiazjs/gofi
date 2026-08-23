@@ -52,7 +52,7 @@ export function ApprovalCard({
 }: {
   strategy: StrategyRow;
   positionAddress: string;
-  onExecuted: () => void;
+  onExecuted: (hash: string) => void;
   onBack: () => void;
   onCancel: () => void;
 }) {
@@ -92,7 +92,7 @@ export function ApprovalCard({
               failureReason: row.failure_reason ?? null,
             },
           });
-          onExecuted();
+          onExecuted(receipt.hash);
           return;
         }
       } catch {
@@ -133,7 +133,7 @@ export function ApprovalCard({
             failureReason: null,
           },
         });
-        onExecuted();
+        onExecuted(payload.receipt.hash);
         void trackConfirmation(payload.plan, payload.receipt);
       } else {
         setState({

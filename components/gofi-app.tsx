@@ -9,8 +9,10 @@ import type { WalletSnapshot } from "@/lib/wdk/account";
 import { AccountChip } from "./account-chip";
 import { ApprovalCard } from "./approval-card";
 import { GoalForm, type GoalDraft } from "./goal-form";
+import { GoalRecap } from "./goal-recap";
 import { Hero } from "./hero";
 import { Protocols } from "./protocols";
+import { Stepper, type FlowStep } from "./stepper";
 import { AnalysisCard, StrategyCard } from "./strategy-view";
 
 
@@ -30,6 +32,8 @@ export function GofiApp() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<Step>("wallet");
+  const [submitted, setSubmitted] = useState<GoalDraft | null>(null);
+  const [settledHash, setSettledHash] = useState<string | null>(null);
 
   const [history, setHistory] = useState<GoalHistoryEntry[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -128,6 +132,7 @@ export function GofiApp() {
       if (!response.ok) throw new Error(payload.error ?? "Request failed");
 
       setProposal(payload as Proposal);
+      setSubmitted(draft);
       setStep("feasibility");
       void loadHistory();
     } catch (caught) {
@@ -137,10 +142,14 @@ export function GofiApp() {
     }
   }
 
-  const afterExecution = useCallback(() => {
-    void refreshWallet();
-    void loadHistory();
-  }, [refreshWallet, loadHistory]);
+  const afterExecution = useCallback(
+    (hash: string) => {
+      setSettledHash(hash);
+      void refreshWallet();
+      void loadHistory();
+    },
+    [refreshWallet, loadHistory]
+  );
 
   return (
     <>
@@ -185,6 +194,22 @@ export function GofiApp() {
         </>
       ) : (
         <div className="space-y-5">
+          <Stepper
+            current={step as FlowStep}
+            executed={settledHash !== null}
+            onJump={(target) => setStep(target)}
+          />
+
+          {/* Only once there is a goal to recap — on step 01 the form itself is
+              still asking the question. */}
+          {submitted && step !== "goal" && (
+            <GoalRecap
+              goal={submitted}
+              analysis={proposal?.analysis}
+              hash={settledHash ?? undefined}
+            />
+          )}
+
           {step === "goal" && (
             <div id="goal" className="scroll-mt-8">
               <GoalForm
