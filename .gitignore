@@ -37,8 +37,15 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# markdown — no Markdown is tracked in this project
+# markdown — nothing is tracked by default.
+# Four files are unignored on purpose, so a teammate cloning this repo gets the
+# rules, the state, and the demo without needing the chat history. Add a fifth
+# only if a person needs it to work on this project; never for AI scratch notes.
 *.md
+!CLAUDE.md
+!DEMO.md
+!AUDIT.md
+!CHANGELOG.md
 
 # IDE
 .vscode/
