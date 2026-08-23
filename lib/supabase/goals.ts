@@ -35,7 +35,9 @@ export async function createGoal(
       target_amount: goal.targetAmount,
       time_horizon_months: goal.timeHorizonMonths,
       risk_profile: goal.riskProfile,
-      status: "analyzed",
+      // Analysing is a simulation. The row exists so the strategy has something
+      // to hang off, but it stays out of the user's list until they keep it.
+      status: "draft",
     })
     .select()
     .single();
@@ -109,6 +111,9 @@ export async function listGoalHistory(
   const { data, error } = await getSupabase()
     .from("goals")
     .select("*, strategies(*), transactions(*)")
+    // Drafts are simulations the user never kept; they stay in the table as a
+    // record but out of the list.
+    .neq("status", "draft")
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -283,4 +288,25 @@ export async function applyConfirmation(
   }
 
   return data as TransactionRow;
+}
+
+/**
+ * Promote a simulated goal into one the user is keeping.
+ *
+ * Analysis alone should not fill somebody's list with things they were only
+ * trying out, so goals arrive as drafts and only become visible once they
+ * accept the strategy.
+ */
+export async function keepGoal(goalId: number): Promise<GoalRow> {
+  const { data, error } = await getSupabase()
+    .from("goals")
+    .update({ status: "analyzed" })
+    .eq("id", goalId)
+    .eq("status", "draft")
+    .select()
+    .single();
+
+  if (error) fail("keepGoal", error);
+
+  return data as GoalRow;
 }

@@ -14,6 +14,7 @@ import { GoalsView } from "./goals-view";
 import { Hero } from "./hero";
 import { Protocols } from "./protocols";
 import { Stepper, type FlowStep } from "./stepper";
+import { ThinkingCard } from "./thinking-card";
 import { AnalysisCard, StrategyCard } from "./strategy-view";
 
 
@@ -30,12 +31,14 @@ export function GofiApp() {
   const [walletLoading, setWalletLoading] = useState(false);
   const [walletError, setWalletError] = useState<string | null>(null);
   const [proposal, setProposal] = useState<Proposal | null>(null);
+  const [analysis, setAnalysis] = useState<GoalAnalysis | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<Step>("wallet");
   const [submitted, setSubmitted] = useState<GoalDraft | null>(null);
   const [settledHash, setSettledHash] = useState<string | null>(null);
   const [view, setView] = useState<"flow" | "goals">("flow");
+  const [keeping, setKeeping] = useState(false);
 
   const [history, setHistory] = useState<GoalHistoryEntry[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -118,11 +121,44 @@ export function GofiApp() {
     };
   }, []);
 
+  /**
+   * The verdict lands first, the strategy follows.
+   *
+   * Feasibility is arithmetic and answers in milliseconds; the allocation needs
+   * a model and takes about half a minute. Running them in sequence left the
+   * user staring at a button for all of it, when the part they most want to
+   * read was ready almost immediately.
+   */
   async function analyze(draft: GoalDraft) {
     setBusy(true);
     setError(null);
     setProposal(null);
+    setAnalysis(null);
+    setSettledHash(null);
 
+    try {
+      const fast = await fetch("/api/goals/feasibility", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(draft),
+      });
+      const verdict = await fast.json();
+
+      if (!fast.ok) throw new Error(verdict.error ?? "Request failed");
+
+      setAnalysis(verdict.analysis as GoalAnalysis);
+      setSubmitted(draft);
+      setStep("feasibility");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Unknown error");
+      return;
+    } finally {
+      setBusy(false);
+    }
+
+    // The slow half, deliberately not awaited above: the verdict is already
+    // interactive while the model works, and the strategy step waits on this
+    // only if the reader gets there first.
     try {
       const response = await fetch("/api/goals", {
         method: "POST",
@@ -134,13 +170,38 @@ export function GofiApp() {
       if (!response.ok) throw new Error(payload.error ?? "Request failed");
 
       setProposal(payload as Proposal);
-      setSubmitted(draft);
-      setStep("feasibility");
       void loadHistory();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unknown error");
+    }
+  }
+
+  /**
+   * Promote the goal out of draft, then move on to approval.
+   *
+   * Analysing costs nothing and commits nothing, so a goal only joins the
+   * user's list at the moment they say the strategy is worth keeping.
+   */
+  async function keepAndContinue() {
+    if (!proposal) return;
+
+    setKeeping(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/goals/${proposal.goal.id}/keep`, {
+        method: "POST",
+      });
+      const payload = await response.json();
+
+      if (!response.ok) throw new Error(payload.error ?? "Request failed");
+
+      void loadHistory();
+      setStep("approval");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Unknown error");
     } finally {
-      setBusy(false);
+      setKeeping(false);
     }
   }
 
@@ -191,6 +252,8 @@ export function GofiApp() {
           loading={historyLoading}
           error={historyError}
           onReload={loadHistory}
+          onBack={() => setView("flow")}
+          canGoBack={proposal !== null || step !== "wallet"}
           onNewGoal={() => {
             // A new goal starts clean, otherwise the recap would carry the
             // previous run's verdict into an unrelated one.
@@ -226,7 +289,7 @@ export function GofiApp() {
           {submitted && step !== "goal" && (
             <GoalRecap
               goal={submitted}
-              analysis={proposal?.analysis}
+              analysis={analysis ?? undefined}
               hash={settledHash ?? undefined}
             />
           )}
@@ -239,26 +302,29 @@ export function GofiApp() {
                 busy={busy}
                 error={error}
                 initial={submitted}
-                analysed={proposal !== null}
+                analysed={analysis !== null}
                 onResume={() => setStep("feasibility")}
               />
             </div>
           )}
 
-          {step === "feasibility" && proposal && (
+          {step === "feasibility" && analysis && (
             <AnalysisCard
-              analysis={proposal.analysis}
-              horizonMonths={submitted?.timeHorizonMonths ?? proposal.goal.time_horizon_months}
+              analysis={analysis}
+              horizonMonths={submitted?.timeHorizonMonths ?? 0}
               onBack={() => setStep("goal")}
               onContinue={() => setStep("strategy")}
             />
           )}
 
+          {step === "strategy" && !proposal && <ThinkingCard />}
+
           {step === "strategy" && proposal && (
             <StrategyCard
               strategy={proposal.strategy}
+              keeping={keeping}
               onBack={() => setStep("feasibility")}
-              onContinue={() => setStep("approval")}
+              onContinue={() => void keepAndContinue()}
             />
           )}
 

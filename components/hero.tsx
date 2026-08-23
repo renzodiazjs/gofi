@@ -76,20 +76,7 @@ export function Hero({
           {connecting ? "Reading chain…" : "Connect wallet"}
         </button>
 
-        <a
-          href="#rails"
-          className="rounded-full border border-white/12 px-6 py-3 text-sm font-medium text-white/60 transition hover:border-white/30 hover:text-white"
-        >
-          How it works
-        </a>
       </div>
-
-      <p
-        className="animate-rise mt-5 font-mono text-[11px] tracking-wide text-white/25"
-        style={{ animationDelay: "300ms" }}
-      >
-        Ethereum Sepolia testnet · no real funds
-      </p>
 
       {error && (
         <p className="mt-5 max-w-md rounded-lg border border-rose-500/25 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">

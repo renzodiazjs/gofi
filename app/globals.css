@@ -159,3 +159,28 @@ body {
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * Strategy stages — each line appears as the work reaches it, rather than all
+ * at once, so the wait reads as progress instead of a pause.
+ * ------------------------------------------------------------------------- */
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.stage-in {
+  animation: stage-in 0.6s ease-out backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-in {
+    animation: none;
+  }
+}

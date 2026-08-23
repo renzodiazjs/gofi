@@ -94,10 +94,13 @@ export function StrategyCard({
   strategy,
   onBack,
   onContinue,
+  keeping = false,
 }: {
   strategy: StrategyRow;
   onBack: () => void;
   onContinue: () => void;
+  /** True while the goal is being promoted out of draft. */
+  keeping?: boolean;
 }) {
   return (
     <Card title="Proposed strategy" step="03">
@@ -150,8 +153,17 @@ export function StrategyCard({
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <Button type="button" variant="shimmer" onClick={onContinue}>
-          Approve &amp; execute
+        {/*
+          Keeping happens here, not at analysis. Trying a goal on should not
+          fill somebody's list with things they were only curious about.
+        */}
+        <Button
+          type="button"
+          variant="shimmer"
+          onClick={onContinue}
+          disabled={keeping}
+        >
+          {keeping ? "Keeping…" : "Keep this strategy"}
         </Button>
         <Button type="button" variant="ghost" onClick={onBack}>
           Back to feasibility

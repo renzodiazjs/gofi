@@ -158,12 +158,18 @@ export function GoalsView({
   error,
   onReload,
   onNewGoal,
+  onBack,
+  canGoBack,
 }: {
   entries: GoalHistoryEntry[] | null;
   loading: boolean;
   error: string | null;
   onReload: () => void;
   onNewGoal: () => void;
+  /** Return to whatever the user was doing, without discarding it. */
+  onBack: () => void;
+  /** False before the first goal, when there is no flow to return to. */
+  canGoBack: boolean;
 }) {
   const goals = entries ?? [];
   const executed = goals.reduce(
@@ -186,7 +192,12 @@ export function GoalsView({
           )}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
+          {canGoBack && (
+            <Button variant="ghost" onClick={onBack}>
+              Back
+            </Button>
+          )}
           <Button variant="ghost" onClick={onReload} disabled={loading}>
             {loading ? "Loading…" : "Refresh"}
           </Button>
