@@ -110,6 +110,7 @@ export function GoalForm({
   initial,
   analysed = false,
   onResume,
+  backLabel = "Back",
 }: {
   onSubmit: (goal: GoalDraft) => void;
   onBack: () => void;
@@ -125,6 +126,11 @@ export function GoalForm({
   analysed?: boolean;
   /** Return to the existing verdict without recomputing it. */
   onResume?: () => void;
+  /**
+   * Names where onBack actually goes. A returning user leaves this step for
+   * their dashboard, not for a connect screen they are already past.
+   */
+  backLabel?: string;
 }) {
   const [draft, setDraft] = useState<GoalDraft>(initial ?? EMPTY_DRAFT);
 
@@ -240,7 +246,7 @@ export function GoalForm({
             variant="ghost"
             onClick={analysed && onResume ? onResume : onBack}
           >
-            {analysed ? "Discard changes" : "Back to wallet"}
+            {analysed ? "Discard changes" : backLabel}
           </Button>
         </div>
       </form>

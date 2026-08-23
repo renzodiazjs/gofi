@@ -7,6 +7,7 @@ import type { GoalHistoryEntry } from "@/lib/supabase/goals";
 import type { GoalRow, StrategyRow } from "@/lib/supabase/types";
 import type { WalletSnapshot } from "@/lib/wdk/account";
 import { AccountMenu } from "./account-menu";
+import type { AgentState } from "./agent-activity";
 import { ApprovalCard } from "./approval-card";
 import { GoalForm, type GoalDraft } from "./goal-form";
 import { GoalRecap } from "./goal-recap";
@@ -40,6 +41,12 @@ export function GofiApp() {
   const [settledHash, setSettledHash] = useState<string | null>(null);
   const [view, setView] = useState<"flow" | "goals" | "dashboard">("flow");
   const [keeping, setKeeping] = useState(false);
+  /**
+   * Where the background strategy call has got to. The verdict is instant and
+   * the allocation is not, so the two halves of one submission need separate
+   * state or the screen cannot say which part is still running.
+   */
+  const [agent, setAgent] = useState<AgentState>("ready");
 
   const [history, setHistory] = useState<GoalHistoryEntry[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -143,6 +150,7 @@ export function GofiApp() {
     setProposal(null);
     setAnalysis(null);
     setSettledHash(null);
+    setAgent("working");
 
     try {
       const fast = await fetch("/api/goals/feasibility", {
@@ -159,6 +167,7 @@ export function GofiApp() {
       setStep("feasibility");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unknown error");
+      setAgent("failed");
       return;
     } finally {
       setBusy(false);
@@ -178,9 +187,11 @@ export function GofiApp() {
       if (!response.ok) throw new Error(payload.error ?? "Request failed");
 
       setProposal(payload as Proposal);
+      setAgent("ready");
       void loadHistory();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unknown error");
+      setAgent("failed");
     }
   }
 
@@ -327,7 +338,18 @@ export function GofiApp() {
             <div id="goal" className="scroll-mt-8">
               <GoalForm
                 onSubmit={analyze}
-                onBack={() => setStep("wallet")}
+                // Leaving the form returns you to whatever you left, which for
+                // anyone with a goal running is the dashboard — not the connect
+                // screen they signed in through half an hour ago.
+                onBack={() => {
+                  if (history && history.length > 0) setView("dashboard");
+                  else setStep("wallet");
+                }}
+                backLabel={
+                  history && history.length > 0
+                    ? "Back to dashboard"
+                    : "Back to wallet"
+                }
                 busy={busy}
                 error={error}
                 initial={submitted}
@@ -340,6 +362,7 @@ export function GofiApp() {
           {step === "feasibility" && analysis && (
             <AnalysisCard
               analysis={analysis}
+              agent={agent}
               horizonMonths={submitted?.timeHorizonMonths ?? 0}
               onBack={() => setStep("goal")}
               onContinue={() => setStep("strategy")}
