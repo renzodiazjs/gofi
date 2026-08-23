@@ -2,6 +2,7 @@
 
 import type { GoalHistoryEntry } from "@/lib/supabase/goals";
 import type { Feasibility } from "@/lib/supabase/types";
+import { EthMarket } from "./eth-market";
 import { Badge, Button, type BadgeTone } from "./ui";
 
 const FEASIBILITY_TONE: Record<Feasibility, BadgeTone> = {
@@ -86,6 +87,12 @@ export function GoalDashboard({
   const capital = Number(entry.initial_capital);
   const elapsed = Math.min(monthsSince(entry.created_at), entry.time_horizon_months);
   const latest = entry.transactions.at(-1);
+
+  // The market panel earns its place only when the strategy actually names ETH.
+  // On a pure-USDT goal it would be an unrelated price ticker.
+  const holdsEth = (strategy?.allocations ?? []).some(
+    (allocation) => allocation.asset.toUpperCase() === "ETH"
+  );
 
   return (
     <section>
@@ -201,6 +208,8 @@ export function GoalDashboard({
           </p>
         </div>
       )}
+
+      {holdsEth && <EthMarket />}
 
       {latest && (
         <div className="mt-5 rounded-xl border border-white/10 bg-white/[0.02] p-6">
