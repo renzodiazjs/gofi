@@ -95,23 +95,32 @@ function NumberInput({
   );
 }
 
+const EMPTY_DRAFT: GoalDraft = {
+  initialCapital: 100,
+  targetAmount: 110,
+  timeHorizonMonths: 12,
+  riskProfile: "moderate",
+};
+
 export function GoalForm({
   onSubmit,
   onBack,
   busy,
   error,
+  initial,
 }: {
   onSubmit: (goal: GoalDraft) => void;
   onBack: () => void;
   busy: boolean;
   error: string | null;
+  /**
+   * What the user last submitted. This step unmounts when the flow moves on,
+   * so without it "edit the goal" would hand back the defaults instead of the
+   * numbers they actually typed.
+   */
+  initial?: GoalDraft | null;
 }) {
-  const [draft, setDraft] = useState<GoalDraft>({
-    initialCapital: 100,
-    targetAmount: 110,
-    timeHorizonMonths: 12,
-    riskProfile: "moderate",
-  });
+  const [draft, setDraft] = useState<GoalDraft>(initial ?? EMPTY_DRAFT);
 
   const set = <K extends keyof GoalDraft>(key: K, value: GoalDraft[K]) =>
     setDraft((current) => ({ ...current, [key]: value }));

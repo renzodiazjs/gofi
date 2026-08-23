@@ -238,6 +238,7 @@ export function GofiApp() {
                 onBack={() => setStep("wallet")}
                 busy={busy}
                 error={error}
+                initial={submitted}
               />
             </div>
           )}

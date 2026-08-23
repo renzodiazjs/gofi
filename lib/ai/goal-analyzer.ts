@@ -80,7 +80,7 @@ export function analyzeGoal(goal: FinancialGoal): GoalAnalysis {
     const months = monthsToTarget(growth, ceiling);
     if (Number.isFinite(months) && months > timeHorizonMonths) {
       suggestions.push(
-        `Extend the horizon to about ${months} months to reach ${targetAmount} at ${ceiling}% APY.`
+        `Extend the horizon to about ${months} months to reach ${targetAmount} USDT at ${ceiling}% APY.`
       );
     }
 
@@ -93,7 +93,7 @@ export function analyzeGoal(goal: FinancialGoal): GoalAnalysis {
       `Keep the ${timeHorizonMonths}-month horizon and target about ${round(
         reachable,
         2
-      )} instead.`
+      )} USDT instead.`
     );
 
     const profiles: RiskProfile[] = ["conservative", "moderate", "aggressive"];
