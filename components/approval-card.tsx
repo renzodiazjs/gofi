@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { StrategyRow } from "@/lib/supabase/types";
 import { Badge, Button, Card, ErrorNote, Field } from "./ui";
@@ -36,6 +36,9 @@ type State =
   // exact quote the server issued, not asserting that one was seen.
   | { phase: "quoted"; plan: Plan; quote: Quote; ticket: string }
   | { phase: "executing"; plan: Plan; quote: Quote; ticket: string }
+  // The wallet cannot fund this step. The figures come from the server, which
+  // is the only place that knows what it would actually send.
+  | { phase: "insufficient"; plan: Plan; message: string; available: number }
   | {
       phase: "executed";
       plan: Plan;
@@ -56,9 +59,60 @@ export function ApprovalCard({
   onBack: () => void;
   onCancel: () => void;
 }) {
-  const [state, setState] = useState<State>({ phase: "idle" });
+  const [state, setState] = useState<State>({ phase: "quoting" });
   const [error, setError] = useState<string | null>(null);
   const [blockedBy, setBlockedBy] = useState<string | null>(null);
+
+  /**
+   * Price the step on arrival.
+   *
+   * Quoting signs nothing, so there is no reason to make the user ask for it —
+   * and it means an under-funded wallet is reported before they reach for the
+   * button rather than after. The first state write happens after the request
+   * resolves, never synchronously inside the effect.
+   */
+  useEffect(() => {
+    let alive = true;
+
+    (async () => {
+      try {
+        const response = await fetch(`/api/strategies/${strategy.id}/approve`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ positionAddress, confirm: false }),
+        });
+        const payload = await response.json();
+        if (!alive) return;
+
+        if (response.status === 422 && payload.available) {
+          setState({
+            phase: "insufficient",
+            plan: payload.plan,
+            message: payload.error,
+            available: Number(payload.available.balance),
+          });
+          return;
+        }
+
+        if (!response.ok) throw new Error(payload.error ?? "Request failed");
+
+        setState({
+          phase: "quoted",
+          plan: payload.plan,
+          quote: payload.quote,
+          ticket: payload.ticket,
+        });
+      } catch (caught) {
+        if (!alive) return;
+        setState({ phase: "idle" });
+        setError(caught instanceof Error ? caught.message : "Unknown error");
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, [strategy.id, positionAddress]);
 
   /**
    * A broadcast hash is not a mined transaction. Poll the ledger endpoint,
@@ -113,6 +167,21 @@ export function ApprovalCard({
       });
       const payload = await response.json();
 
+      // Under-funding is a state of this step, not a failure of the request:
+      // the server has already worked out what it would send and what the
+      // wallet holds, so show those figures rather than recomputing them here
+      // from the allocation — the two do not agree once the per-transaction
+      // cap clamps the transfer.
+      if (response.status === 422 && payload.available) {
+        setState({
+          phase: "insufficient",
+          plan: payload.plan,
+          message: payload.error,
+          available: Number(payload.available.balance),
+        });
+        return;
+      }
+
       if (!response.ok) {
         if (payload.blockedBy) {
           setBlockedBy(
@@ -164,17 +233,57 @@ export function ApprovalCard({
 
       {state.phase === "idle" && (
         <Button
+          variant="shimmer"
           onClick={() => {
             setState({ phase: "quoting" });
             void call(false);
           }}
           disabled={busy}
         >
-          Preview transaction
+          Price this step
         </Button>
       )}
 
       {state.phase === "quoting" && <Button disabled>Pricing…</Button>}
+
+      {state.phase === "insufficient" && (
+        <div className="space-y-5">
+          <div className="rounded-lg border border-amber-400/25 bg-amber-400/[0.06] p-4">
+            <p className="text-sm text-amber-200">{state.message}</p>
+            <p className="mt-2 text-xs text-amber-200/60">
+              Fund the wallet and price the step again, or lower the goal so the
+              first tranche fits what you hold.
+            </p>
+          </div>
+
+          <dl className="rounded-lg border border-white/[0.07] bg-black/30 p-4">
+            <Field
+              label="Allocation"
+              value={`${state.plan.allocationPct}% → ${state.plan.allocatedUsdt} USDT`}
+            />
+            <Field
+              label="This step needs"
+              value={`${state.plan.thisTransferUsdt} USDT`}
+            />
+            <Field label="Wallet holds" value={`${state.available} USDT`} />
+          </dl>
+
+          <div className="flex gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setState({ phase: "quoting" });
+                void call(false);
+              }}
+            >
+              Price it again
+            </Button>
+            <Button variant="ghost" onClick={onCancel}>
+              Edit the goal
+            </Button>
+          </div>
+        </div>
+      )}
 
       {(state.phase === "quoted" || state.phase === "executing") && (
         <div className="space-y-5">
