@@ -73,12 +73,17 @@ export function AnalysisCard({
         </div>
       )}
 
+      {/*
+        Two identical buttons make the reader work out which one is the way
+        forward. The step that advances carries the weight and sits first, the
+        way it does on every other screen in the flow.
+      */}
       <div className="mt-5 flex flex-wrap items-center gap-3">
+        <Button type="button" variant="shimmer" onClick={onContinue}>
+          See the strategy
+        </Button>
         <Button type="button" variant="ghost" onClick={onBack}>
           Edit financial goal
-        </Button>
-        <Button type="button" variant="ghost" onClick={onContinue}>
-          Review proposed strategy
         </Button>
       </div>
     </Card>
@@ -145,11 +150,11 @@ export function StrategyCard({
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
+        <Button type="button" variant="shimmer" onClick={onContinue}>
+          Approve &amp; execute
+        </Button>
         <Button type="button" variant="ghost" onClick={onBack}>
           Back to feasibility
-        </Button>
-        <Button type="button" variant="ghost" onClick={onContinue}>
-          Approve &amp; execute
         </Button>
       </div>
     </Card>

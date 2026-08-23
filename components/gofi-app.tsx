@@ -239,6 +239,8 @@ export function GofiApp() {
                 busy={busy}
                 error={error}
                 initial={submitted}
+                analysed={proposal !== null}
+                onResume={() => setStep("feasibility")}
               />
             </div>
           )}

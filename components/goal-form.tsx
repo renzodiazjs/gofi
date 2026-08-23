@@ -108,6 +108,8 @@ export function GoalForm({
   busy,
   error,
   initial,
+  analysed = false,
+  onResume,
 }: {
   onSubmit: (goal: GoalDraft) => void;
   onBack: () => void;
@@ -119,8 +121,19 @@ export function GoalForm({
    * numbers they actually typed.
    */
   initial?: GoalDraft | null;
+  /** True once a verdict exists, which turns this step into an edit. */
+  analysed?: boolean;
+  /** Return to the existing verdict without recomputing it. */
+  onResume?: () => void;
 }) {
   const [draft, setDraft] = useState<GoalDraft>(initial ?? EMPTY_DRAFT);
+
+  const dirty =
+    !initial ||
+    draft.initialCapital !== initial.initialCapital ||
+    draft.targetAmount !== initial.targetAmount ||
+    draft.timeHorizonMonths !== initial.timeHorizonMonths ||
+    draft.riskProfile !== initial.riskProfile;
 
   const set = <K extends keyof GoalDraft>(key: K, value: GoalDraft[K]) =>
     setDraft((current) => ({ ...current, [key]: value }));
@@ -197,11 +210,37 @@ export function GoalForm({
         {error && <ErrorNote>{error}</ErrorNote>}
 
         <div className="flex flex-wrap items-center gap-3">
-          <Button type="submit" variant="shimmer" disabled={busy || formInvalid}>
-            {busy ? "Analyzing…" : "Analyze goal"}
-          </Button>
-          <Button type="button" variant="ghost" onClick={onBack}>
-            Back to wallet
+          {/*
+            Editing is not the same as starting over. If the numbers changed the
+            verdict has to be recomputed — showing the old one against new
+            figures would be a lie. If they did not, re-running costs forty
+            seconds and a duplicate record to arrive at the answer already on
+            screen, so the button simply takes you back to it.
+          */}
+          {analysed && !dirty ? (
+            <Button type="button" variant="shimmer" onClick={onResume}>
+              Back to feasibility
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              variant="shimmer"
+              disabled={busy || formInvalid}
+            >
+              {busy
+                ? "Analyzing…"
+                : analysed
+                  ? "Update analysis"
+                  : "Analyze goal"}
+            </Button>
+          )}
+
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={analysed && onResume ? onResume : onBack}
+          >
+            {analysed ? "Discard changes" : "Back to wallet"}
           </Button>
         </div>
       </form>
