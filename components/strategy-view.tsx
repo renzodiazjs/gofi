@@ -18,10 +18,13 @@ const CONFIDENCE_TONE: Record<StrategyRow["confidence"], BadgeTone> = {
 
 export function AnalysisCard({
   analysis,
+  horizonMonths,
   onBack,
   onContinue,
 }: {
   analysis: GoalAnalysis;
+  /** Named in the label so the reader can see why two figures can coincide. */
+  horizonMonths: number;
   onBack: () => void;
   onContinue: () => void;
 }) {
@@ -34,8 +37,14 @@ export function AnalysisCard({
       </div>
 
       <dl className="grid grid-cols-2 gap-x-8">
+        {/*
+          At a twelve-month horizon the total return and the APY are the same
+          number by definition. Without the horizon on the label that reads as a
+          duplicate rather than an identity, and the first question becomes
+          whether the screen is broken.
+        */}
         <Field
-          label="Required return"
+          label={`Required return over ${horizonMonths} months`}
           value={`${analysis.requiredReturnPct}%`}
         />
         <Field label="Per month" value={`${analysis.monthlyReturnPct}%`} />

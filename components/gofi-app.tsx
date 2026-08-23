@@ -246,6 +246,7 @@ export function GofiApp() {
           {step === "feasibility" && proposal && (
             <AnalysisCard
               analysis={proposal.analysis}
+              horizonMonths={submitted?.timeHorizonMonths ?? proposal.goal.time_horizon_months}
               onBack={() => setStep("goal")}
               onContinue={() => setStep("strategy")}
             />
