@@ -143,10 +143,36 @@ Please do not add a fifth unless a person needs it to do their job.
 
 ## Where things stand
 
+As of **2026-08-23**: 47 commits on `main`, working tree clean, pushed. `pnpm
+lint` and `pnpm build` both green.
+
 Working end to end: wallet → goal → feasibility → strategy → approval →
 on-chain execution, with four confirmed Sepolia transactions, each verified
 through a different RPC node than the one that signed it.
 
-Open items are in `AUDIT.md`. The short version: no auth (deliberate, localhost
-only), and `account.simulate.<method>()` is available but unused — that is the
-best next thing to pick up.
+## What is left
+
+In priority order. Every item is written up in full in `AUDIT.md` under
+"Open — accepted for the hackathon".
+
+1. **`account.simulate.<method>()` is available and unused.** It returns
+   `SimulationResult { decision, policy_id, matched_rule, reason, trace[] }`,
+   which is the right way to preflight a policy decision without signing. Today
+   the approval flow infers the outcome from a quote — and a quote is not
+   governed by policies at all. **Best thing to pick up next.**
+2. **No authentication.** One shared wallet, no accounts. Deliberate for a
+   localhost testnet demo; the largest gap to anything production-shaped.
+3. **Quote ticket key is per-process.** Fine for one instance, breaks behind a
+   load balancer. Fix is a shared secret from the environment.
+4. **Daily volume is read from our ledger, not from chain.** A transfer signed
+   through any other path is not counted against the cap.
+5. **No rate limiting** on the analysis endpoint, which calls a model per
+   request.
+6. **`allowedProtocols: []`.** Nothing is integrated, so every non-USD₮ leg is a
+   recommendation that has never executed. The UI says so in three places —
+   that honesty must survive whatever comes next.
+
+One caveat on priorities: this list was written as pre-submission triage, with
+the Aleph window dated 22–23 August 2026. If the hackathon is behind us, the
+order changes — authentication stops being a deliberate deferral and becomes the
+actual next feature.
