@@ -2,6 +2,7 @@
 
 import type { GoalAnalysis } from "@/lib/ai/goal-analyzer";
 import type { Feasibility, StrategyRow } from "@/lib/supabase/types";
+import { AgentStrip, type AgentState } from "./agent-activity";
 import { Badge, Button, Card, Field, type BadgeTone } from "./ui";
 
 const FEASIBILITY_TONE: Record<Feasibility, BadgeTone> = {
@@ -21,12 +22,15 @@ export function AnalysisCard({
   horizonMonths,
   onBack,
   onContinue,
+  agent,
 }: {
   analysis: GoalAnalysis;
   /** Named in the label so the reader can see why two figures can coincide. */
   horizonMonths: number;
   onBack: () => void;
   onContinue: () => void;
+  /** Where the background strategy call has got to. */
+  agent: AgentState;
 }) {
   return (
     <Card title="Feasibility" step="02">
@@ -86,6 +90,8 @@ export function AnalysisCard({
           Edit financial goal
         </Button>
       </div>
+
+      <AgentStrip state={agent} />
     </Card>
   );
 }
